@@ -1,11 +1,11 @@
-**Nothing here yet**
+**rayo-client is a NodeJS client for the popular Rayo protocol**
 
 
 ## Installation
     
-To install APPNAME, use [npm](http://github.com/isaacs/npm):
+To install rayo-client, use [npm](http://github.com/isaacs/npm):
 
-        $ npm install -g APPNAME
+        $ npm install -g rayo-client
 
 ## Usage
 
@@ -13,11 +13,7 @@ Nothing here yet
 
 ## Examples
 
-You can view further examples in the [example folder.](https://github.com/wearefractal/APPNAME/tree/master/examples)
-
-## Contributors
-
-- [Contra](https://github.com/Contra)
+You can view further examples in the [example folder.](https://github.com/wearefractal/rayo-client.js/tree/master/examples)
 
 ## LICENSE
 
