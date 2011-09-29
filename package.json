@@ -1,11 +1,11 @@
 {
-   "name":"rayo-client",
+   "name":"rayo",
    "description":"NodeJS client for the popular Rayo protocol",
    "version":"0.0.1",
-   "homepage":"http://github.com/wearefractal/rayo-client.js",
-   "repository":"git://github.com/wearefractal/rayo-client.js.git",
+   "homepage":"http://github.com/wearefractal/node-rayo",
+   "repository":"git://github.com/wearefractal/node-rayo.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
-   "main":"./lib/main.js",
+   "main":"./lib/rayo.js",
    
    "dependencies":{
       "node-xmpp":"*"
