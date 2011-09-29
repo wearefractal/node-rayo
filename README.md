@@ -1,11 +1,11 @@
-**node-rayo is a NodeJS client for the popular Rayo protocol**
+**node-rayo is a NodeJS client for the popular [Rayo](https://github.com/rayo/) protocol**
 
 
 ## Installation
     
-To install rayo-client, use [npm](http://github.com/isaacs/npm):
+To install node-rayo, use [npm](http://github.com/isaacs/npm):
 
-        $ npm install rayo
+    $ npm install rayo
 
 ## Usage
 
