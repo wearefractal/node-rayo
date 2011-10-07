@@ -8,7 +8,7 @@
    "main":"./lib/rayo.js",
 
    "dependencies":{
-      "simple-xmpp":"*",
+      "node-xmpp":"*",
       "protege":"*"
    },
    "devDependencies":{
