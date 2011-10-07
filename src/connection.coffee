@@ -3,16 +3,14 @@ static = require './static'
 EventEmitter = require('events').EventEmitter
 
 class Connection extends EventEmitter
-  constructor: ({@server, @jabberId, @jabberPass}) ->
-    @server ?= static.xmppHost
-    if @server.contains ':'
-      [@server, @port] = @server.split ':'
-    else
-      @port = static.xmppServer
+  constructor: ({@host, @jabberId, @jabberPass}) ->
+    @host ?= static.default.host
+    if @host.contains ':' then [@host, @port] = @host.split ':' # Split out the port if they put it in the server. Idiocy fallback
+    @port ?= static.defaultPort
 
   connect: ->
-    @queue = []
-    @conn = xmpp.Client
+    @queue.clear()
+    @conn = new xmpp.Client
       jid: @jabberId
       password: @jabberPass
       host: @server
@@ -21,19 +19,24 @@ class Connection extends EventEmitter
     @conn.on 'online', ->
       @conn.on 'stanza', @handleStanza
       @emit 'connected'
-      @conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online
+      @conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online. TODO: Customize
 
-    @conn.on 'authFail', (err) -> @emit 'failure', err
+    @conn.on 'authFail', (err) -> @emit 'error', err
     @conn.on 'error', (err) -> @emit 'error', err
 
   disconnect: -> @conn.end()
 
   send: (command, cb) ->
-    @conn.send command.getElement()
+    # TODO: Append @message to getRaw before running getElement. @message = ids and shit
+    @conn.send command.getRaw().getElement()
     @queue[command.getId()] = (err, res) ->
-      if res.attrs.id then delete @queue[res.attrs.id]
-      cb err, res
+      if res.attrs.id
+        delete @queue[res.attrs.id]
+        cb err, res
 
+  ###
+    Handlers for incoming messages/events
+  ###
   handleStanza: (stanza) ->
     console.log stanza
     throw new Error "Message from unknown domain #{ stanza.from.domain }" unless stanza.from.domain is @server
@@ -62,7 +65,9 @@ class Connection extends EventEmitter
     cb = @getListener stanza
     cb new Error stanza.getChild().value ? "Generic Stanza Error. Stanza: #{ stanza }"
 
-  # Utility stuff
+  ###
+    Utilities
+  ###
   isRayo: (stanza) -> return stanza.getNS() is static.xmlns
 
   getListener: (stanza) ->
