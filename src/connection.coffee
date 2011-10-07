@@ -1,13 +1,14 @@
 xmpp = require 'node-xmpp'
+static = require './static'
 EventEmitter = require('events').EventEmitter
 
 class Connection extends EventEmitter
-  constructor: (@server, @jabberId, @jabberPass) ->
-    @server ?= 'call.rayo.net'
+  constructor: ({@server, @jabberId, @jabberPass}) ->
+    @server ?= static.xmppHost
     if @server.contains ':'
       [@server, @port] = @server.split ':'
     else
-      @port = 5222
+      @port = static.xmppServer
 
   connect: ->
     @queue = []
@@ -20,6 +21,7 @@ class Connection extends EventEmitter
     @conn.on 'online', ->
       @conn.on 'stanza', @handleStanza
       @emit 'connected'
+      @conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online
 
     @conn.on 'authFail', (err) -> @emit 'failure', err
     @conn.on 'error', (err) -> @emit 'error', err
@@ -58,10 +60,10 @@ class Connection extends EventEmitter
 
   handleError: (stanza) ->
     cb = @getListener stanza
-    cb new Error stanza.getChild().getText() || "Generic Stanza Error. Stanza: #{ stanza }"
+    cb new Error stanza.getChild().value ? "Generic Stanza Error. Stanza: #{ stanza }"
 
   # Utility stuff
-  isRayo: (stanza) -> return stanza.getNS() is 'urn:xmpp:rayo:1'
+  isRayo: (stanza) -> return stanza.getNS() is static.xmlns
 
   getListener: (stanza) ->
     throw new Error "Missing stanza.attrs.id. Stanza: #{ stanza }" unless stanza.attrs.id
