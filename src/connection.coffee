@@ -27,10 +27,9 @@ class Connection extends EventEmitter
   disconnect: -> @conn.end()
 
   send: (command, cb) ->
-    element = command.getElement()
-    @conn.send element
-    @queue[element.id] = (err, res) ->
-      @queue = @queue.remove element.id
+    @conn.send command.getElement()
+    @queue[command.getId()] = (err, res) ->
+      if res.attrs.id then delete @queue[res.attrs.id]
       cb err, res
 
   handleStanza: (stanza) ->
