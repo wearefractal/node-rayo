@@ -27,8 +27,8 @@ class Connection extends EventEmitter
   disconnect: -> @conn.end()
 
   send: (command, cb) ->
-    # TODO: Append @message to getRaw before running getElement. @message = ids and shit
-    @conn.send command.getRaw().getElement()
+    # TODO: Append @message running getElement. @message = jabberids and shit
+    @conn.send command.getElement()
     @queue[command.getId()] = (err, res) ->
       if res.attrs.id
         delete @queue[res.attrs.id]

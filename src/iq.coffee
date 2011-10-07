@@ -13,5 +13,6 @@ class Iq
     sub = el.c @type, @attributes # Append our main attributes to our message. Id, to, from, etc.
     if @child? then sub.c @child # If we have a child, append it
     if @headers? then sub.c('header', head) for head in @headers # If we have headers, append all of them
-    # TODO: FINISH THIS
+
+    return el
 
