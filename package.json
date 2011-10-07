@@ -6,9 +6,10 @@
    "repository":"git://github.com/wearefractal/node-rayo.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
    "main":"./lib/rayo.js",
-   
+
    "dependencies":{
-      "node-xmpp":"*"
+      "simple-xmpp":"*",
+      "protege":"*"
    },
    "devDependencies":{
       "coffee-script":"*",
@@ -18,3 +19,4 @@
       "node":">= 0.4.0"
    }
 }
+
