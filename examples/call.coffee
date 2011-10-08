@@ -7,7 +7,7 @@ conn = new rayo.Connection
   jabberPass: 'notmypassword9001'
 
 log.debug conn
-conn.on 'error', (err) -> log.error err.message
+conn.on 'error', (err) -> log.error err.message ? err
 conn.on 'connected', ->
   log.info 'Connected!'
   # conn.end()
