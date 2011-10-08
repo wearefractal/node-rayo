@@ -49,7 +49,7 @@ class Connection extends EventEmitter
       else throw new Error "Unknown Stanza type. Stanza: #{ stanza }"
 
   handleIq: (iq) ->
-    switch stanza.attrs.type
+    switch iq.attrs.type
       when 'error' then @handleError iq
       when 'success'
         cb = @getListener iq
@@ -58,7 +58,7 @@ class Connection extends EventEmitter
 
   handlePresence: (presence) ->
     throw new Error "Stanza is not Rayo protocol. Stanza: #{ presence }" unless @isRayo presence
-    if stanza.attrs.type is 'error' then return @handleError presence
+    if presence.attrs.type is 'error' then return @handleError presence
     cb = @getListener presence
     type = presence.getChild()
 
