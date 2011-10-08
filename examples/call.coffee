@@ -3,6 +3,7 @@ log = require 'node-log'
 log.setName 'rayo-test'
 
 conn = new rayo.Connection
+  host: 'jabber.org'
   jabberId: 'contrahax@jabber.org'
   jabberPass: 'coding2424'
 
