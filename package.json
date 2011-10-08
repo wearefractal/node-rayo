@@ -13,7 +13,8 @@
    },
    "devDependencies":{
       "coffee-script":"*",
-      "node-log":"*"
+      "node-log":"*",
+      "should":"*"
    },
    "engines":{
       "node":">= 0.4.0"
