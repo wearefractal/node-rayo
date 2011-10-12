@@ -15,8 +15,8 @@ class Iq
   getElement: (jid) ->
     if @message.from is "#{ jid.user }@#{ jid.domain }" then @message.from += "/#{ jid.resource }"
     el = new xmpp.Element 'iq', @message
-    sub = el.c @type, @attributes # Append our main attributes to our message. Id, to, from, etc.
-    sub.c(child) for child in @children
+    sub = el.c @type, @attributes
+    sub.c(child) for child of @children
     sub.c('header', {name: head, value: @headers[head]}) for head of @headers # If we have headers, append all of them
     return el
 
