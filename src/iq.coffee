@@ -5,14 +5,18 @@ class Iq
   constructor: ({@type, @message, @headers, @attributes, @child}) ->
     throw new Error 'Type required for Iq!' unless @type
     @attributes ?= {}
+    @message ?= {}
+    @headers ?= []
+    @message.type ?= 'set'
     @attributes.xmlns ?= static.xmlns
 
-  getId: -> return @id
+  getId: -> return @message.id
   getElement: ->
     el = new xmpp.Element 'iq', @message
     sub = el.c @type, @attributes # Append our main attributes to our message. Id, to, from, etc.
-    if @child? then sub.c @child # If we have a child, append it
-    if @headers? then sub.c('header', head) for head in @headers # If we have headers, append all of them
+    sub.c @child if @child? # If we have a child, append it
+    sub.c('header', {name: head, value: @headers[head]}) for head of @headers # If we have headers, append all of them
 
     return el
 
+module.exports = Iq

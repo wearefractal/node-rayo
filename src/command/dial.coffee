@@ -1,11 +1,10 @@
-iq = require '../iq'
+Iq = require '../iq'
 
-class Dial
+class Dial extends Iq
   constructor: ({@to, @from}) ->
-    throw new Error 'DialCommand missing arguments' unless @to and @from
-    return new iq
-      type: 'dial'
-      attributes:
-        to: @to
-        from: @from
+    super type: 'dial'
+    attributes:
+      to: to
+      from: from
 
+module.exports = Dial
