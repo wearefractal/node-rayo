@@ -7,7 +7,7 @@ Iq = require './iq'
 EventEmitter = require('events').EventEmitter
 
 class Connection extends EventEmitter
-  constructor: ({@host, @jabberId, @jabberPass}) ->
+  constructor: ({@host, @port, @jabberId, @jabberPass}) ->
     @host ?= static.default.host
     if @host.contains ':' then [@host, @port] = @host.split ':' # Split out the port if they put it in the server. Idiocy fallback
     @port ?= static.default.port
@@ -32,15 +32,13 @@ class Connection extends EventEmitter
   disconnect: -> @conn.end()
 
   send: (command, cb) ->
-    # TODO: Append @message running getElement. @message = jabberids and shit
-    el = command.getElement()
-    console.log 'Sending outbound message: ' + el.toString()
+    el = command.getElement @conn.jid
+    # console.log 'Sending outbound message: ' + el.toString()
     @conn.send el
     if Object.isFunction cb
       @queue[command.getId()] = (err, res) =>
-        if err
-          cb err
-        else if res.attrs.id
+        if err then return cb err
+        if res.attrs.id
           delete @queue[res.attrs.id]
           cb err, res
 
@@ -48,39 +46,46 @@ class Connection extends EventEmitter
     Handlers for incoming messages/events
   ###
   handleStanza: (stanza) ->
-    console.log 'Receiving inbound message: ' + stanza
+    # console.log 'Receiving inbound message: ' + stanza
     # throw new Error "Message from unknown domain #{ stanza.from.domain }" unless stanza.from.domain is @conn.server
     if stanza.attrs.type is 'error' then return @handleError stanza
     # TODO: Fire event for stanza ID
     switch stanza.name
       when 'presence' then @handlePresence stanza
       when 'iq' then @handleIq stanza
-      else throw new Error "Unknown Stanza type. Stanza: #{ stanza }"
+      else console.log "Unknown Stanza type. Stanza: #{ stanza }"
 
   handleIq: (iq) ->
-    # console.log 'New Iq stanza: ' + iq.toString()
+    @emit 'iq', iq
     switch iq.attrs.type
       when 'error' then @handleError iq
-      when 'success'
+      when 'result'
         cb = @getListener iq
-        cb null, stanza.getChild()
+        child = iq.children[0]
+        if child
+          head = {}
+          childs = {}
+          head[x.attrs.name] = x.attrs.value for x in child.children when x.name is 'header'
+          childs[x.name] = x.attrs for x in child.children when x.name != 'header'
+          icky = new Iq type: child.type or iq.type, message: iq.attrs, attributes: child.attrs, headers: head, children: childs
+        else
+          icky = new Iq type: iq.type, message: iq.attrs
+        @emit icky.type, icky # Emit event for incoming command
+        cb null, iq
       else console.log 'Unknown Iq - ' + iq
 
   handlePresence: (presence) ->
-    if presence.attrs.type is 'error' then return @handleError presence
-    cb = @getListener presence
+    @emit 'presence', presence
     child = presence.children[0]
-    
     if @isRayo child
-      console.log "Received new #{ child.name } presence"
+      cb = @getListener presence
       head = {}
+      childs = {}
       head[x.attrs.name] = x.attrs.value for x in child.children when x.name is 'header'
-      command = new Presence type: child.name, message: presence.attrs, attributes: child.attrs, headers: head
-        
-      @emit child.name, command # Emit event for incoming command
-      @emit 'presence', command
-    else
-      @emit 'stanza', presence
+      childs[x.name] = x.attrs for x in child.children when x.name != 'header'
+      command = new Presence type: child.name, message: presence.attrs, attributes: child.attrs, headers: head, children: childs
+      @emit child.name, command # Emit event for incoming command 
+      cb null, command
       
   handleError: (stanza) ->
     cb = @getListener stanza

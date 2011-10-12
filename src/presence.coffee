@@ -2,16 +2,21 @@ xmpp = require 'node-xmpp'
 static = require './static'
 
 class Presence
-  constructor: ({@type, @message, @headers, @attributes, @child}) ->
+  constructor: ({@type, @message, @headers, @attributes, @children}) ->
+    throw new Error 'Type required for Iq!' unless @type
     @attributes ?= {}
+    @message ?= {}
+    @headers ?= {}
+    @children ?= {}
     @attributes.xmlns ?= static.xmlns
-
-  getElement: ->
+    
+  getId: -> return @message.id
+  getElement: (jid) ->
+    if @message.from is "#{ jid.user }@#{ jid.domain }" then @message.from += "/#{ jid.resource }"
     el = new xmpp.Element 'presence', @message
     sub = el.c @type, @attributes # Append our main attributes to our message. Id, to, from, etc.
-    if @child? then sub.c @child # If we have a child, append it
-    if @headers? then sub.c('header', head) for head in @headers # If we have headers, append all of them
-
+    sub.c(child) for child in @children
+    sub.c('header', {name: head, value: @headers[head]}) for head of @headers # If we have headers, append all of them
     return el
 
 module.exports = Presence

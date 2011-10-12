@@ -5,7 +5,7 @@ class Accept extends Iq
     super type: 'accept'
     message: 
       id: @offer.message.id
-      to: @offer.message.to
-      from: @offer.message.from
+      to: @offer.message.from
+      from: @offer.message.to
 
 module.exports = Accept

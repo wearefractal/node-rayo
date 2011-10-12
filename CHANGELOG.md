@@ -1,3 +1,3 @@
-0.0.1 / September 29, 2011
+0.0.1 / October 8, 2011
 ==================
   * Start of the project
