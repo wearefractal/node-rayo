@@ -49,7 +49,6 @@ class Connection extends EventEmitter
     # console.log 'Receiving inbound message: ' + stanza
     # throw new Error "Message from unknown domain #{ stanza.from.domain }" unless stanza.from.domain is @conn.server
     if stanza.attrs.type is 'error' then return @handleError stanza
-    # TODO: Fire event for stanza ID
     switch stanza.name
       when 'presence' then @handlePresence stanza
       when 'iq' then @handleIq stanza
