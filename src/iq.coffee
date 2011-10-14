@@ -1,5 +1,6 @@
 xmpp = require 'node-xmpp'
 static = require './static'
+util = require './util'
 
 class Iq
   constructor: ({@type, @message, @headers, @attributes, @children}) ->
@@ -9,6 +10,7 @@ class Iq
     @headers ?= {}
     @children ?= {}
     @message.type ?= 'set'
+    @message.id ?= util.getRandomId() 
     @attributes.xmlns ?= static.xmlns
 
   getId: -> return @message.id
@@ -18,7 +20,7 @@ class Iq
       
     if @message.from is "#{ jid.user }@#{ jid.domain }" or "$localuser"
       @message.from = "#{ jid.user }@#{ jid.domain }/#{ jid.resource }"
-      
+    
     el = new xmpp.Element 'iq', @message
     sub = el.c @type, @attributes
     sub.c(child) for child of @children

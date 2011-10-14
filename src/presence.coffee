@@ -3,7 +3,7 @@ static = require './static'
 
 class Presence
   constructor: ({@type, @message, @headers, @attributes, @children}) ->
-    throw new Error 'Type required for Iq!' unless @type
+    throw new Error 'Type required for Presence!' unless @type
     @attributes ?= {}
     @message ?= {}
     @headers ?= {}
