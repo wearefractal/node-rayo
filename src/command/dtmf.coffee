@@ -6,6 +6,7 @@ class DTMF extends Iq
     throw new Error 'callId and tones required for DTMF command' unless @callId and @tones
     super type: 'dtmf'
     message:
+      id: @callId
       from: @from
       to: @callId + '@$callserver'
       
