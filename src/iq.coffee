@@ -12,8 +12,13 @@ class Iq
     @attributes.xmlns ?= static.xmlns
 
   getId: -> return @message.id
-  getElement: (jid) ->
-    if @message.from is "#{ jid.user }@#{ jid.domain }" then @message.from += "/#{ jid.resource }"
+  getElement: (server, jid) ->
+    if @message.to.contains '$callserver'
+      @message.to = @message.to.replace '$callserver', server
+      
+    if @message.from is "#{ jid.user }@#{ jid.domain }" or "$localuser"
+      @message.from = "#{ jid.user }@#{ jid.domain }/#{ jid.resource }"
+      
     el = new xmpp.Element 'iq', @message
     sub = el.c @type, @attributes
     sub.c(child) for child of @children

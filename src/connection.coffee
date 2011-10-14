@@ -23,7 +23,8 @@ class Connection extends EventEmitter
     @conn.on 'online', =>
       @conn.on 'stanza', (stanza) => @handleStanza stanza
       @emit 'connected'
-      @conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online. TODO: Customize
+      @conn.send new xmpp.Element('presence').c('ping')
+      #@conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online. TODO: Customize
 
     @conn.on 'authFail', (err) => @emit 'error', err # TODO: Standardize this error
 
@@ -32,21 +33,19 @@ class Connection extends EventEmitter
   disconnect: -> @conn.end()
 
   send: (command, cb) ->
-    el = command.getElement @conn.jid
-    # console.log 'Sending outbound message: ' + el.toString()
+    el = command.getElement @host, @conn.jid
+    console.log 'Sending outbound message: ' + el.toString()
     @conn.send el
     if Object.isFunction cb
       @queue[command.getId()] = (err, res) =>
-        if err then return cb err
-        if res.attrs.id
-          delete @queue[res.attrs.id]
-          cb err, res
+        delete @queue[res.attrs.id] if res?.attrs?.id
+        cb err, res
 
   ###
     Handlers for incoming messages/events
   ###
   handleStanza: (stanza) ->
-    # console.log 'Receiving inbound message: ' + stanza
+    console.log 'Receiving inbound message: ' + stanza
     # throw new Error "Message from unknown domain #{ stanza.from.domain }" unless stanza.from.domain is @conn.server
     if stanza.attrs.type is 'error' then return @handleError stanza
     switch stanza.name
@@ -70,7 +69,7 @@ class Connection extends EventEmitter
         else
           icky = new Iq type: iq.type, message: iq.attrs
         @emit icky.type, icky # Emit event for incoming command
-        cb null, iq
+        cb null, icky
       else console.log 'Unknown Iq - ' + iq
 
   handlePresence: (presence) ->

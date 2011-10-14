@@ -3,7 +3,7 @@ log = require 'node-log'
 log.setName 'rayo-test'
 
 conn = new rayo.Connection
-  host: 'jabber.org'
+  # host: 'jabber.org'
   jabberId: 'contrahax@jabber.org'
   jabberPass: 'testpass'
 
@@ -11,6 +11,10 @@ log.debug conn
 conn.on 'error', (err) -> log.error err.message
 conn.on 'connected', ->
   log.info 'Connected!'
+  conn.send new rayo.Dial(to: 'sip:contracontra@sip2sip.info', from: 'sip:test@whadupdoe.net'), (err, resp) ->
+    log.error err if err
+    log.info resp if resp
+      
   conn.on 'offer', (cmd) ->
     conn.send new rayo.Accept(offer: cmd), (err, resp) -> 
       log.error err.message if err

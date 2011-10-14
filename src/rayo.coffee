@@ -7,3 +7,4 @@ module.exports =
   # Commands
   Accept: require './command/accept'
   Answer: require './command/answer'
+  Dial: require './command/dial'

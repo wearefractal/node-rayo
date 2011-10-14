@@ -3,8 +3,12 @@ Iq = require '../iq'
 class Dial extends Iq
   constructor: ({@to, @from}) ->
     super type: 'dial'
-    attributes:
-      to: to
-      from: from
+    message:
+      id: '1234'
+      to: '$callserver'
+      from: '$localuser'
+    attributes: 
+      to: @to
+      from: @from
 
 module.exports = Dial
