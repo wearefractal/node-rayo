@@ -7,11 +7,12 @@ Iq = require './iq'
 EventEmitter = require('events').EventEmitter
 
 class Connection extends EventEmitter
-  constructor: ({@host, @port, @jabberId, @jabberPass}) ->
+  constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->
     @host ?= static.default.host
     if @host.contains ':' then [@host, @port] = @host.split ':' # Split out the port if they put it in the server. Idiocy fallback
     @port ?= static.default.port
-
+    @verbose ?= false
+  
   connect: ->
     @queue = []
     @conn = new xmpp.Client
@@ -34,7 +35,7 @@ class Connection extends EventEmitter
 
   send: (command, cb) ->
     el = command.getElement @host, @conn.jid
-    console.log 'Sending outbound message: ' + el.toString()
+    if @verbose then console.log 'Sending outbound message: ' + el.toString()
     @conn.send el
     if Object.isFunction cb
       @queue[command.getId()] = (err, res) =>
@@ -45,7 +46,7 @@ class Connection extends EventEmitter
     Handlers for incoming messages/events
   ###
   handleStanza: (stanza) ->
-    console.log 'Receiving inbound message: ' + stanza
+    if @verbose then console.log 'Receiving inbound message: ' + stanza
     # throw new Error "Message from unknown domain #{ stanza.from.domain }" unless stanza.from.domain is @conn.server
     if stanza.attrs.type is 'error' then return @handleError stanza
     switch stanza.name

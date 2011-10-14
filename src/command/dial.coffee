@@ -1,10 +1,11 @@
 Iq = require '../iq'
 
 class Dial extends Iq
-  constructor: ({@to, @from}) ->
+  constructor: ({@id, @to, @from}) ->
+    @id ?= '1234' + Math.floor Math.random()*101 # id ?= 1234[0-100]
     super type: 'dial'
     message:
-      id: '1234'
+      id: @id
       to: '$callserver'
       from: '$localuser'
     attributes: 
