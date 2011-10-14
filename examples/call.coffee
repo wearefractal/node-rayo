@@ -16,7 +16,13 @@ conn.on 'connected', ->
     log.info 'Call ID: ' + resp.attributes.id
     conn.on 'ringing', (cmd) ->
       log.info 'Call ' + resp.attributes.id + ' is ringing...'
-      
+    
+    conn.on 'answered', (cmd) ->
+      log.info 'Call ' + resp.attributes.id + ' picked up!'
+      conn.send new rayo.DTMF(callId: resp.attributes.id, tones: '123123123'), (err, resp) -> # mary had a little lamb
+        log.error if err
+        log.info resp if resp
+          
   conn.on 'offer', (cmd) ->
     conn.send new rayo.Accept(offer: cmd), (err, resp) -> 
       log.error err.message if err
@@ -25,8 +31,8 @@ conn.on 'connected', ->
         
   conn.on 'end', (cmd) ->
     # conn.disconnect()
-    console.log cmd
-    console.log 'Call ended, reason: ' + Object.keys(cmd.children)[0]
+    # console.log cmd
+    log.info 'Call ended, reason: ' + Object.keys(cmd.children)[0]
     
 conn.connect()
 
