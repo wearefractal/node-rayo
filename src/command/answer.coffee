@@ -2,6 +2,7 @@ Message = require '../message'
 
 class Answer extends Message
   constructor: ({@offer}) ->
+    throw new Error 'Missing "offer" parameter' unless @offer
     super 
       rootName: 'iq'
       childName: 'answer'

@@ -38,6 +38,7 @@ class Connection extends EventEmitter
         cb = @callbacks[id]
         if Object.isFunction cb
           cb null, cmd
+          delete cb
             
     @on 'message', matchQueue
       
@@ -54,33 +55,27 @@ class Connection extends EventEmitter
   ###
   handleStanza: (stanza) ->
     if @verbose then console.log 'Receiving inbound message: ' + stanza
-    # throw new Error "Message from unknown domain #{ stanza.from.domain }" unless stanza.from.domain is @conn.server
+    # throw new Error "Message from unknown domain #{ stanza.attrs.from.domain }" unless stanza.attrs.from.domain is @conn.server
     if stanza.attrs.type is 'error' then return @handleError stanza
-    switch stanza.name
-      when 'presence' then @handlePresence stanza
-      when 'iq' then @handleIq stanza
-      else console.log "Unknown Stanza type. Stanza: #{ stanza }"
-
-  handleIq: (iq) ->
-    @emit 'iq', iq
-    switch iq.attrs.type
-      when 'error' then @handleError iq
-      when 'result'
-        message = @getMessage iq
-        @emit message.childName, message # Emit event for incoming command
-        @emit 'message', message
-      else console.log 'Unknown Iq - ' + iq
-
-  handlePresence: (presence) ->
-    @emit 'presence', presence
-    message = @getMessage presence
-    @emit message.childName, message # Emit event for incoming command 
+    @emit stanza.name, stanza
+    message = @getMessage stanza
+    @emit message.childName, message # Emit event for incoming command
     @emit 'message', message
       
   handleError: (stanza) ->
     cb = @callbacks[stanza.attrs.id]
     if Object.isFunction cb
-      cb new Error(stanza.children[0]?.children[0]?.name or "Stanza Error! Stanza: #{ stanza }") # TODO: Standardize
+      if stanza.children
+        err = (child for child in stanza.children when child.name is 'error')[0]
+        if err
+          msg = (child for child in err.children when child.name is 'text')[0].children[0]
+          return cb new Error "Type: #{ err.attrs.type }, Message: #{ msg }"
+        else if stanza.children and stanza.children[0].children
+          return cb new Error stanza.children[0].children[0].name
+      else
+        return cb new Error "Generic Error! Stanza: #{ stanza }"
+    else
+      console.log 'UNHANDLED ERROR! - ' + stanza
 
   ###
     Utilities
@@ -95,7 +90,7 @@ class Connection extends EventEmitter
       mess = new Message 
         rootName: stanza.name
         rootAttributes: stanza.attrs
-        childName: child.name or child.type
+        childName: child.name
         childAttributes: child.attrs
         sipHeaders: head
         children: childs

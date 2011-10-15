@@ -12,7 +12,7 @@ class Message
     @sipHeaders ?= {}
     @children ?= []
     if @rootName is 'iq' then @rootAttributes.type ?= 'set'
-    @rootAttributes.id ?= util.getRandomId() 
+    @rootAttributes.id ?= util.getRandomId()
     @childAttributes.xmlns ?= static.xmlns
 
   getId: -> return @rootAttributes.id
