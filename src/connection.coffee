@@ -13,7 +13,7 @@ class Connection extends EventEmitter
     @verbose ?= false
   
   connect: ->
-    @queue = []
+    @callbacks = []
     @conn = new xmpp.Client
       jid: @jabberId
       password: @jabberPass
@@ -35,7 +35,7 @@ class Connection extends EventEmitter
       # return unless cmd.rootName
       id = cmd.getId()
       if id?
-        cb = @queue[id]
+        cb = @callbacks[id]
         if Object.isFunction cb
           cb null, cmd
             
@@ -46,7 +46,7 @@ class Connection extends EventEmitter
   send: (command, cb) ->
     el = command.getElement @host, @conn.jid
     if @verbose then console.log 'Sending outbound message: ' + el.toString()
-    if Object.isFunction cb then @queue[command.getId()] = cb
+    if Object.isFunction cb then @callbacks[command.getId()] = cb
     @conn.send el
     
   ###
@@ -73,12 +73,12 @@ class Connection extends EventEmitter
 
   handlePresence: (presence) ->
     @emit 'presence', presence
-    command = @getMessage presence
-    @emit command.childName, command # Emit event for incoming command 
-    @emit 'message', command
+    message = @getMessage presence
+    @emit message.childName, message # Emit event for incoming command 
+    @emit 'message', message
       
   handleError: (stanza) ->
-    cb = @getListener stanza
+    cb = @callbacks[stanza.attrs.id]
     if Object.isFunction cb
       cb new Error(stanza.children[0]?.children[0]?.name or "Stanza Error! Stanza: #{ stanza }") # TODO: Standardize
 
@@ -105,15 +105,6 @@ class Connection extends EventEmitter
         rootAttributes: stanza.attrs
         childName: stanza.type
     return mess
-        
-  getListener: (stanza) ->
-    # Incoming calls have no id, commented out for now
-    # throw new Error "Missing stanza.attrs.id. Stanza: #{ stanza }" unless stanza.attrs.id
-    callback = @queue[stanza.attrs.id]
-    if callback?
-      return callback
-    else
-      return ->
 
 module.exports = Connection
 
