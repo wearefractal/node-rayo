@@ -1,11 +1,13 @@
-Iq = require '../iq'
+Message = require '../message'
 
-class Answer extends Iq
+class Answer extends Message
   constructor: ({@offer}) ->
-    super type: 'answer'
-    message: 
-      id: @offer.message.id
-      to: @offer.message.from
-      from: @offer.message.to
+    super 
+      rootName: 'iq'
+      childName: 'answer'
+      rootAttributes: 
+        id: @offer.rootAttributes.id
+        to: @offer.rootAttributes.from
+        from: @offer.rootAttributes.to
 
 module.exports = Answer

@@ -1,13 +1,15 @@
-Iq = require '../iq'
+Message = require '../message'
 
-class Dial extends Iq
+class Dial extends Message
   constructor: ({@to, @from}) ->
-    super type: 'dial'
-    message:
-      to: '$callserver'
-      from: '$localuser'
-    attributes: 
-      to: @to
-      from: @from
+    super 
+      rootName: 'iq'
+      childName: 'dial'
+      rootAttributes:
+        to: '$callserver'
+        from: '$localuser'
+      childAttributes: 
+        to: @to
+        from: @from
 
 module.exports = Dial

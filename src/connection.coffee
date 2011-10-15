@@ -1,8 +1,7 @@
 xmpp = require 'node-xmpp'
 static = require './static'
 rayo = require './rayo'
-Presence = require './presence'
-Iq = require './iq'
+Message = require './message'
 
 EventEmitter = require('events').EventEmitter
 
@@ -30,18 +29,26 @@ class Connection extends EventEmitter
     @conn.on 'authFail', (err) => @emit 'error', err # TODO: Standardize this error
 
     @conn.on 'error', (err) => @emit 'error', err
-
+    
+    # Match incoming messages with a callback
+    matchQueue = (cmd) =>
+      # return unless cmd.rootName
+      id = cmd.getId()
+      if id?
+        cb = @queue[id]
+        if Object.isFunction cb
+          cb null, cmd
+            
+    @on 'message', matchQueue
+      
   disconnect: -> @conn.end()
 
   send: (command, cb) ->
     el = command.getElement @host, @conn.jid
     if @verbose then console.log 'Sending outbound message: ' + el.toString()
+    if Object.isFunction cb then @queue[command.getId()] = cb
     @conn.send el
-    if Object.isFunction cb
-      @queue[command.getId()] = (err, res) =>
-        delete @queue[res.attrs.id] if res?.attrs?.id
-        cb err, res
-
+    
   ###
     Handlers for incoming messages/events
   ###
@@ -59,42 +66,46 @@ class Connection extends EventEmitter
     switch iq.attrs.type
       when 'error' then @handleError iq
       when 'result'
-        cb = @getListener iq
-        child = iq.children[0]
-        if child
-          head = {}
-          childs = {}
-          head[x.attrs.name] = x.attrs.value for x in child.children when x.name is 'header'
-          childs[x.name] = x.attrs for x in child.children when x.name != 'header'
-          icky = new Iq type: child.type or iq.type, message: iq.attrs, attributes: child.attrs, headers: head, children: childs
-        else
-          icky = new Iq type: iq.type, message: iq.attrs
-        @emit icky.type, icky # Emit event for incoming command
-        cb null, icky
+        message = @getMessage iq
+        @emit message.childName, message # Emit event for incoming command
+        @emit 'message', message
       else console.log 'Unknown Iq - ' + iq
 
   handlePresence: (presence) ->
     @emit 'presence', presence
-    child = presence.children[0]
-    if @isRayo child
-      cb = @getListener presence
-      head = {}
-      childs = {}
-      head[x.attrs.name] = x.attrs.value for x in child.children when x.name is 'header'
-      childs[x.name] = x.attrs for x in child.children when x.name != 'header'
-      command = new Presence type: child.name, message: presence.attrs, attributes: child.attrs, headers: head, children: childs
-      @emit child.name, command # Emit event for incoming command 
-      cb null, command
+    command = @getMessage presence
+    @emit command.childName, command # Emit event for incoming command 
+    @emit 'message', command
       
   handleError: (stanza) ->
     cb = @getListener stanza
-    cb new Error(stanza.children[0]?.children[0]?.name or "Stanza Error! Stanza: #{ stanza }") # TODO: Standardize
+    if Object.isFunction cb
+      cb new Error(stanza.children[0]?.children[0]?.name or "Stanza Error! Stanza: #{ stanza }") # TODO: Standardize
 
   ###
     Utilities
   ###
-  isRayo: (stanza) -> return stanza?.getNS() is static.xmlns
-
+  getMessage: (stanza) ->
+    child = stanza.children[0]
+    if child
+      head = {}
+      childs = {}
+      head[x.attrs.name] = x.attrs.value for x in child.children when x.name is 'header'
+      childs[x.name] = x.attrs for x in child.children when x.name != 'header'
+      mess = new Message 
+        rootName: stanza.name
+        rootAttributes: stanza.attrs
+        childName: child.name or child.type
+        childAttributes: child.attrs
+        sipHeaders: head
+        children: childs
+    else
+      mess = new Message
+        rootName: stanza.name
+        rootAttributes: stanza.attrs
+        childName: stanza.type
+    return mess
+        
   getListener: (stanza) ->
     # Incoming calls have no id, commented out for now
     # throw new Error "Missing stanza.attrs.id. Stanza: #{ stanza }" unless stanza.attrs.id
