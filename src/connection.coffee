@@ -13,7 +13,7 @@ class Connection extends EventEmitter
     @verbose ?= false
   
   connect: ->
-    @callbacks = []
+    @callbacks = {}
     @conn = new xmpp.Client
       jid: @jabberId
       password: @jabberPass
