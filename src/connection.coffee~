@@ -21,21 +21,19 @@ class Connection extends EventEmitter
       port: @port
 
     @conn.on 'online', =>
-      @connected = true
       @conn.on 'stanza', (stanza) => @handleStanza stanza
       @emit 'connected'
-      @conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online. TODO: Customize
-      
-    @conn.on 'offline', => 
-      @connected = false
-      @emit 'disconnected'
-      
+      console.log new xmpp.Element('presence').c('ping').tree()
+      #@conn.send new xmpp.Element('presence').c('ping')
+      #@conn.send new xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online. TODO: Customize
+
     @conn.on 'authFail', (err) => @emit 'error', err # TODO: Standardize this error
 
     @conn.on 'error', (err) => @emit 'error', err
     
     # Match incoming messages with a callback
     matchQueue = (cmd) =>
+      # return unless cmd.rootName
       id = cmd.getId()
       if id?
         cb = @callbacks[id]
@@ -57,6 +55,7 @@ class Connection extends EventEmitter
     Handlers for incoming messages/events
   ###
   handleStanza: (stanza) ->
+    console.log require('sys').inspect stanza
     @emit 'stanza', stanza # Emits 'stanza' with raw stanza
     if @verbose then console.log 'Receiving inbound message: ' + stanza
     # throw new Error "Message from unknown domain #{ stanza.attrs.from.domain }" unless stanza.attrs.from.domain is @conn.server

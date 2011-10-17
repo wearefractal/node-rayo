@@ -7,7 +7,7 @@ conn = new rayo.Connection
   jabberId: 'contrahax@jabber.org'
   jabberPass: 'testpass'
   verbose: true
-
+  
 conn.on 'error', (err) -> log.error err.message
 conn.on 'connected', ->
   log.info 'Connected!'
@@ -20,9 +20,8 @@ conn.on 'connected', ->
     conn.on 'end', (cmd) -> log.info 'Call ended, reason: ' + Object.keys(cmd.children)[0]
           
   conn.on 'offer', (cmd) -> 
-    #conn.send new rayo.Answer offer: cmd
-    conn.send new rayo.Reject offer: cmd, reason: 'busy'
-
-conn.on 'disconnected', -> log.info 'Connection closed'
-  
+    #conn.send new rayo.Answer(offer: cmd)
+    conn.send new rayo.Reject(offer: cmd, reason: 'busy'), (err, cmd) ->
+      log.error err.message if err
+    
 conn.connect()
