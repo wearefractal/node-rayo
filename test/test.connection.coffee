@@ -1,7 +1,7 @@
 >> Given a valid Rayo connection
 
   path = require 'path'
-  rayo = require '../src/rayo'
+  rayo = require path.join process.cwd(), './src/rayo'
 
   conn = new rayo.Connection
     jabberId: 'contrahax@jabber.org'
