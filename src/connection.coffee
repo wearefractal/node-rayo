@@ -39,9 +39,8 @@ class Connection extends EventEmitter
       id = cmd.getId()
       if id?
         cb = @callbacks[id]
-        if Object.isFunction cb
-          cb null, cmd
-          delete cb
+        cb null, cmd
+        delete cb
             
     @on 'message', matchQueue
       
@@ -50,7 +49,7 @@ class Connection extends EventEmitter
   send: (command, cb) ->
     el = command.getElement @host, @conn.jid
     if @verbose then console.log 'Sending outbound message: ' + el.toString()
-    if Object.isFunction cb then @callbacks[command.getId()] = cb
+    if typeof cb is 'function' then @callbacks[command.getId()] = cb
     @conn.send el
     
   ###
