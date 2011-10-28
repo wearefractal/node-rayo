@@ -9,7 +9,8 @@
 
    "dependencies":{
       "node-xmpp":"*",
-      "node-stringprep":"*"
+      "node-stringprep":"*",
+      "eventrouter":"*"
    },
    "devDependencies":{
       "node-log":"*",
