@@ -5,10 +5,15 @@
     
 To install node-rayo, use [npm](http://github.com/isaacs/npm):
 
-    $ npm install rayo
+  $ npm install rayo
+
+## Dependencies
+
+  sudo apt-get install libexpat1-dev
 
 ## Usage
 
+``var rayo = require('rayo');``
   
 ## Examples
 
