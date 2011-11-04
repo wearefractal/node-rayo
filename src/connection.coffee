@@ -8,7 +8,7 @@ EventEmitter = require('events').EventEmitter
 class Connection extends EventEmitter
   constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->
     @host ?= static.default.host
-    if @host.contains ':' then [@host, @port] = @host.split ':' # Split out the port if they put it in the server. Idiocy fallback
+    if @host.indexOf ':' > 0 then [@host, @port] = @host.split ':' # Split out the port if they put it in the server. Idiocy fallback
     @port ?= static.default.port
     @verbose ?= false
   
@@ -39,7 +39,7 @@ class Connection extends EventEmitter
       id = cmd.getId()
       if id?
         cb = @callbacks[id]
-        cb null, cmd
+        cb? null, cmd
         delete cb
             
     @on 'message', matchQueue
@@ -49,7 +49,8 @@ class Connection extends EventEmitter
   send: (command, cb) ->
     el = command.getElement @host, @conn.jid
     if @verbose then console.log 'Sending outbound message: ' + el.toString()
-    if typeof cb is 'function' then @callbacks[command.getId()] = cb
+    if cb? and typeof cb is 'function' 
+      @callbacks[command.getId()] = cb
     @conn.send el
     
   ###
@@ -67,7 +68,7 @@ class Connection extends EventEmitter
       
   handleError: (stanza) ->
     cb = @callbacks[stanza.attrs.id]
-    if Object.isFunction cb
+    if cb? and typeof cb is 'function'
       if stanza.children
         err = (child for child in stanza.children when child.name is 'error')[0]
         if err

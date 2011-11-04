@@ -17,7 +17,7 @@ class Message
 
   getId: -> return @rootAttributes.id
   getElement: (server, jid) ->
-    if @rootAttributes.to.contains '$callserver'
+    if @rootAttributes.to.indexOf '$callserver' > 0
       @rootAttributes.to = @rootAttributes.to.replace '$callserver', server
       
     if @rootAttributes.from is "#{ jid.user }@#{ jid.domain }" or "$localuser"
