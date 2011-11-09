@@ -1,9 +1,10 @@
-## TEST
+#>> Setup
+
 _ = require 'slice'
 Message = _.load 'message.models.Message'
 should = require 'should'
 
-#>>When I try to build a message
+#>> When I try to build a message
 
 message =
   new Message
@@ -16,7 +17,7 @@ message =
       xmlns:stream : "http://etherx.jabber.org/streams"
     childName: "end"
 
-#>>Then I should have a message
+#>> Then I should have a message
 
 message.rootName.should.eql "presence"
 id = message.getId()

@@ -2,8 +2,10 @@ _ = require 'slice'
 xmpp = _.load 'node-xmpp'
 
 getElement = (message, server, jid) ->
+
   if message.rootAttributes.to.indexOf '$callserver' > 0
-      message.rootAttributes.to = message.rootAttributes.to.replace '$callserver', server
+
+    message.rootAttributes.to = message.rootAttributes.to.replace '$callserver', server
 
     if message.rootAttributes.from is "#{ jid.user }@#{ jid.domain }" or "$localuser"
       message.rootAttributes.from = "#{ jid.user }@#{ jid.domain }/#{ jid.resource }"
