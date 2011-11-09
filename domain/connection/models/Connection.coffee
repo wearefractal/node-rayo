@@ -1,25 +1,18 @@
-path = require 'path'
-static = require './static'
-rayo = require './rayo'
-Message = require './message'
-EventEmitter = require('events').EventEmitter
+_ = require 'slice'
+path = _.load 'path'
+EventEmitter = _.load('events').EventEmitter
+Message = _.load 'message.models.message'
+config = _.load 'config'
+xmpp = _.load 'connection.models.XMPPClient'
 
 class Connection extends EventEmitter
-  constructor: ({@xmpp, @host, @port, @jabberId, @jabberPass, @verbose}) ->
-    @xmpp ?= require 'node-xmpp'
-    @host ?= static.default.host
-    if @host.indexOf ':' > 0 then [@host, @port] = @host.split ':' # Split out the port if they put it in the server. Idiocy fallback
-    @port ?= static.default.port
+  constructor: ({@client, @verbose}) ->
     @verbose ?= false
   #
-  connect: ->
+  connect: (xmppClient) ->
     @callbacks = {}
 
-    @xmppClient = new @xmpp.Client
-      jid: @jabberId
-      password: @jabberPass
-      host: @server
-      port: @port
+    @xmppClient = xmppClient
 
     @xmppClient.on 'online', =>
       console.log 'online'

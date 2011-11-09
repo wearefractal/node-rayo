@@ -1,14 +1,16 @@
-Message = require '../message'
+_ = require 'slice'
+Message = _.load 'message.models.Message'
 
 class Accept extends Message
   constructor: ({@offer}) ->
     throw new Error 'Missing "offer" parameter' unless @offer
-    super 
+    super
       rootName: 'iq'
       childName: 'accept'
-      rootAttributes: 
+      rootAttributes:
         id: @offer.rootAttributes.id
         to: @offer.rootAttributes.from
         from: @offer.rootAttributes.to
 
 module.exports = Accept
+
