@@ -4,7 +4,7 @@ xmppClient = _.load 'xmpp.models.XMPPClient'
 send = _.load 'connection.services.send'
 
 
-console.log send
+console.log send.toString()
 
 class Connection
 
