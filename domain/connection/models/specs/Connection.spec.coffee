@@ -1,7 +1,7 @@
 >> Setup
 
   _ = require 'slice'
-  Connnection = _.load 'connection.models.Connection'
+  Connection = _.load 'connection.models.Connection'
 
 >> When I try to create a Connection
 

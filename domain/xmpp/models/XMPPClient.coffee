@@ -2,8 +2,8 @@ _ = require 'slice'
 xmpp = _.load 'node-xmpp'
 config = _.load 'connection.config'
 
-handleStanza = _.load 'connection.services.handleStanza'
-setStatus = _.load 'connection.xmpp.services.setStatus'
+handleStanza = _.load 'xmpp.services.handleStanza'
+setStatus = _.load 'xmpp.services.setStatus'
 
 
 class XMPPClient

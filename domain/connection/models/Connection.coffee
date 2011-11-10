@@ -1,6 +1,6 @@
 _ = require 'slice'
 config = _.load 'connection.config'
-xmppClient = _.load 'connection.xmpp.models.XMPPClient'
+xmppClient = _.load 'xmpp.models.XMPPClient'
 send = _.load 'connection.services.send'
 
 class Connection
