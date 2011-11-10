@@ -1,110 +1,53 @@
 _ = require 'slice'
-path = _.load 'path'
-EventEmitter = _.load('events').EventEmitter
-Message = _.load 'message.models.message'
-config = _.load 'config'
-xmpp = _.load 'connection.models.XMPPClient'
+config = _.load 'connection.config'
+#EventEmitter = _.load('events').EventEmitter
+xmppClient = _.load 'connection.xmpp.models.XMPPClient'
+send = (args...) -> #_.load 'connection.services.send'
 
-class Connection extends EventEmitter
-  constructor: ({@client, @verbose}) ->
+class Connection #extends EventEmitter
+
+  constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->
+
+    @host ?= config.default.host
+    # Split out the port if they put it in the server
+    if @host.indexOf ':' > 0 then [@host, @port] = @host.split ':'
+    @port ?= config.default.port
     @verbose ?= false
-  #
-  connect: (xmppClient) ->
-    @callbacks = {}
+    @xmppClient = new xmppClient @ # inject self to xmppClient
 
-    @xmppClient = xmppClient
+  connect: -> @xmppClient.connect()
+  disconnect: -> @xmppClient.disconnect()
 
-    @xmppClient.on 'online', =>
-      console.log 'online'
-      @connected = true
-      @xmppClient.on 'stanza', (stanza) => @handleStanza stanza
-      @emit 'connected'
-      @xmppClient.send new @xmpp.Element('presence').c('show').t('chat').up().c('status').t('I am online!') # Change status to online. TODO: Customize
+  send: (command, callback) -> send @xmppClient, command, callback
 
-    @xmppClient.on 'offline', =>
-      @connected = false
-      @emit 'disconnected'
-
-    @xmppClient.on 'authFail', (err) => @emit 'error', err # TODO: Standardize this error
-
-    @xmppClient.on 'error', (err) => @emit 'error', err
-
-    # Match incoming messages with a callback
-    matchQueue = (cmd) =>
-      id = cmd.getId()
-      if id?
-        cb = @callbacks[id]
-        cb? null, cmd
-        delete cb
-
-    @on 'message', matchQueue
-
-  #
-  disconnect: -> @xmppClient.end()
-
-  #
-  send: (command, cb) ->
-    el = command.getElement @host, @xmppClient.jid
-    if @verbose then console.log 'Sending outbound message: ' + el.toString()
-    if cb? and typeof cb is 'function'
-      @callbacks[command.getId()] = cb
-    @xmppClient.send el
-
-  ###
-    Handlers for incoming messages/events
-  ###
-  handleStanza: (stanza) ->
-    @emit 'stanza', stanza # Emits 'stanza' with raw stanza
-    if @verbose then console.log 'Receiving inbound message: ' + stanza
-    # throw new Error "Message from unknown domain #{ stanza.attrs.from.domain }" unless stanza.attrs.from.domain is @xmppClient.server
-    if stanza.attrs.type is 'error' then return @handleError stanza
-    @emit stanza.name, stanza # Emits 'iq' or 'presence' with raw stanza
-    message = @getMessage stanza
-    @emit message.childName, message # Emits command name with formatted stanza
-    console.log message
-    @emit 'message', message # Emits 'message' with formatted stanza
-
-  #
-  handleError: (stanza) ->
-    cb = @callbacks[stanza.attrs.id]
-    console.log "callback"
-    if cb? and typeof cb is 'function'
-      console.log "cb is a function"
-      if stanza.children
-        err = (child for child in stanza.children when child.name is 'error')[0]
-        if err
-          msg = (child for child in err.children when child.name is 'text')[0].children[0]
-          return cb new Error "Type: #{ err.attrs.type }, Message: #{ msg }"
-        else if stanza.children and stanza.children[0].children
-          return cb new Error stanza.children[0].children[0].name
-      else
-        return cb new Error "Generic Error! Stanza: #{ stanza }"
-    else
-      console.log 'UNHANDLED ERROR! - ' + stanza
-
-  ###
-    Utilities
-  ###
-  getMessage: (stanza) ->
-    child = stanza.children[0]
-    if child
-      head = {}
-      childs = {}
-      head[x.attrs.name] = x.attrs.value for x in child.children when x.name is 'header'
-      childs[x.name] = x.attrs for x in child.children when x.name != 'header'
-      mess = new Message
-        rootName: stanza.name
-        rootAttributes: stanza.attrs
-        childName: child.name
-        childAttributes: child.attrs
-        sipHeaders: head
-        children: childs
-    else
-      mess = new Message
-        rootName: stanza.name
-        rootAttributes: stanza.attrs
-        childName: stanza.type
-    return mess
 
 module.exports = Connection
+
+## TEST
+
+should = require 'should'
+
+#>> When I try to create a Connection
+
+conn = new Connection
+  host: 'telefonica115.orl.voxeo.net'
+  jabberId: 'wearefractal@jabber.org'
+  jabberPass: 'ill4jabber'
+  verbose: true
+
+#>> Then it should be created ok
+
+conn.should.be.ok
+
+#>> When I try to create a Connection with port in the host
+
+conn = new Connection
+  host: 'telefonica115.orl.voxeo.net:8080'
+  jabberId: 'wearefractal@jabber.org'
+  jabberPass: 'ill4jabber'
+  verbose: true
+
+#>> Then it should split it out ok
+
+conn.port.should.equal '8080'
 
