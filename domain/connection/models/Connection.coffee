@@ -3,8 +3,8 @@ config = _.load 'connection.config'
 xmppClient = _.load 'xmpp.models.XMPPClient'
 send = _.load 'connection.services.send'
 
-
-console.log send.toString()
+# checking mocking functionality
+# console.log send.toString()
 
 class Connection
 
