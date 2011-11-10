@@ -3,6 +3,9 @@ config = _.load 'connection.config'
 xmppClient = _.load 'xmpp.models.XMPPClient'
 send = _.load 'connection.services.send'
 
+
+console.log send
+
 class Connection
 
   constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->

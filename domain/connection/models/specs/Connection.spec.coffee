@@ -15,7 +15,7 @@
 
   conn.should.be.ok
 
->> When I try to create a Connection with port in the host
+>> When I try to create a Connection with a port in the host
 
   conn = new Connection
     host: 'telefonica115.orl.voxeo.net:8080'
