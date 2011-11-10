@@ -6,7 +6,7 @@ handleStanza = _.load 'connection.services.handleStanza'
 setStatus = _.load 'connection.xmpp.services.setStatus'
 
 
-class XMPPClient extends xmpp
+class XMPPClient
  constructor: (@connection) ->
 
     @connection.status ?= "I am online"
@@ -24,7 +24,7 @@ class XMPPClient extends xmpp
     @xmppClient.on 'online', =>
       console.log 'online'
       @connected = true
-      @xmppClient.on 'stanza', (stanza) => handleStanza stanza
+      @xmppClient.on 'stanza', (stanza) => handleStanza stanza, @connection
       @emit 'connected'
       setStatus @, @connection.status
 
