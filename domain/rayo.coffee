@@ -1,18 +1,21 @@
+_ = require 'slice'
+
 module.exports =
-  Connection: require './connection'
-  Static: require './static'
+
+  Connection: _.load 'connection.models.Connection'
 
   # Commands
-  Accept: require './command/accept'
-  Answer: require './command/answer'
-  Hangup: require './command/hangup'
-  Mute: require './command/mute'
-  Unmute: require './command/unmute'
-  Hold: require './command/hold'
-  Unhold: require './command/unhold'
-  Redirect: require './command/redirect'
-  Reject: require './command/reject'
 
-  Dial: require './command/dial'
-  DTMF: require './command/dtmf'
+  Accept:   _.load 'commands.models.Accept'
+  Answer:   _.load 'commands.models.Answer'
+  Hangup:   _.load 'commands.models.Hangup'
+  Mute:     _.load 'commands.models.Mute'
+  Unmute:   _.load 'commands.models.Unmute'
+  Hold:     _.load 'commands.models.Hold'
+  Unhold:   _.load 'commands.models.Unhold'
+  Redirect: _.load 'commands.models.Redirect'
+  Reject:   _.load 'commands.models.Reject'
+
+  Dial:     _.load 'commands.models.Dial'
+  DTMF:     _.load 'commands.models.DTMF'
 

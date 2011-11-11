@@ -1,20 +1,15 @@
 _ = require 'slice'
-config = _.load 'connection.config'
-xmppClient = _.load 'xmpp.models.XMPPClient'
-send = _.load 'connection.services.send'
+require 'protege'
 
-# checking mocking functionality
-# console.log send.toString()
+xmppClient = _.load 'xmpp.models.XMPPClient'
+parseHost  = _.load 'connection.services.parseHost'
+send       = _.load 'connection.services.send'
 
 class Connection
 
   constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->
 
-    @host ?= config.default.host
-    # Split out the port if they put it in the server
-    if @host.indexOf ':' > 0 then [@host, @port] = @host.split ':'
-
-    @port ?= config.default.port
+    {@host, @port} = parseHost @host, @port
     @verbose ?= false
     @xmppClient = new xmppClient @ # inject self to xmppClient
 

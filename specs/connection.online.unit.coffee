@@ -1,5 +1,5 @@
 
->> Setup dependency libraries
+>> Setup
 
   path = require 'path'
   rayo = require path.join process.cwd(), 'src/rayo'
