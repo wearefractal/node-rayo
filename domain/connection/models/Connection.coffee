@@ -1,12 +1,11 @@
 _ = require 'slice'
-
+EventEmitter = _.load('events').EventEmitter
 xmppClient   = _.load 'xmpp.models.XMPPClient'
 messageQueue = _.load 'message.models.MessageQueue'
 parseHost    = _.load 'connection.services.parseHost'
 send         = _.load 'connection.services.send'
 
-
-class Connection
+class Connection extends EventEmitter
 
   constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->
 
