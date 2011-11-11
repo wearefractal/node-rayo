@@ -2,7 +2,6 @@
 handleStanzaError = (stanza, connection) ->
 
   callback = connection.messageQueue.find stanza.attrs.id
-  console.log "callback"
 
   if callback? and typeof callback is 'function'
     if stanza.children
@@ -16,6 +15,7 @@ handleStanzaError = (stanza, connection) ->
       return cb new Error "Generic Error! Stanza: #{ stanza }"
   else
     console.log 'UNHANDLED ERROR! - ' + stanza
+
 
 module.exports = handleStanzaError
 

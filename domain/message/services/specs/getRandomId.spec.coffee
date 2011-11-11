@@ -1,16 +1,16 @@
-#>> Setup
+>> Setup
 
-_ = require 'slice'
-getRandomId = _.load 'message.services.getRandomId'
+  _ = require 'slice'
 
-#>> When I try to create a random number
+  getRandomId = _.load 'message.services.getRandomId'
 
-result = getRandomId()
-result2 = getRandomId()
+>> When I try to create a random number
 
-#>> Then the result should be a number
+  result = getRandomId()
+  result2 = getRandomId()
 
-should = require 'should'
-result.should.be.a "string"
-result2.should.not.equal result
+>> Then the result should be a number
+
+  result.should.be.a "string"
+  result2.should.not.equal result
 
