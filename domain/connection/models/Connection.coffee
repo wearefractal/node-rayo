@@ -1,9 +1,10 @@
 _ = require 'slice'
-require 'protege'
 
-xmppClient = _.load 'xmpp.models.XMPPClient'
-parseHost  = _.load 'connection.services.parseHost'
-send       = _.load 'connection.services.send'
+xmppClient   = _.load 'xmpp.models.XMPPClient'
+messageQueue = _.load 'message.models.MessageQueue'
+parseHost    = _.load 'connection.services.parseHost'
+send         = _.load 'connection.services.send'
+
 
 class Connection
 
@@ -11,7 +12,9 @@ class Connection
 
     {@host, @port} = parseHost @host, @port
     @verbose ?= false
-    @xmppClient = new xmppClient @ # inject self to xmppClient
+
+    @xmppClient = new xmppClient @ # inject self
+    @messageQueue = new messageQueue @
 
   connect: -> @xmppClient.connect()
   disconnect: -> @xmppClient.disconnect()

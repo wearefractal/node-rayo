@@ -1,5 +1,5 @@
 class MessageQueue
-  constructor: ->
+  constructor: (@connection) ->
     @queue = []
 
   push: (id, message) ->

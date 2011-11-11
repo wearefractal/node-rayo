@@ -1,5 +1,8 @@
 _ = require 'slice'
+require 'protege'
+
 config = _.load 'connection.config'
+
 
 parseHost = (host, port) ->
 
