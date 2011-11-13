@@ -1,11 +1,15 @@
-_ = require 'slice'
 require 'protege'
+_ = require 'slice'
 config = _.load 'connection.config'
 
 parseHost = (host, port) ->
 
   host ?= config.default.host
   port ?= config.default.port
+
+  console.log host
+  console.log port
+
 
   portInHost = -> return host.contains ':'
 

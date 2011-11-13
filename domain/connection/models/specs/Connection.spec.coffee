@@ -15,15 +15,3 @@
 
   conn.should.be.ok
 
->> When I try to create a Connection with a port in the host
-
-  conn = new Connection
-    host: 'telefonica115.orl.voxeo.net:8080'
-    jabberId: 'wearefractal@jabber.org'
-    jabberPass: 'ill4jabber'
-    verbose: true
-
->> Then it should split it out ok
-
-  conn.port.should.equal '8080'
-
