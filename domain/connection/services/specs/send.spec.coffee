@@ -1,20 +1,21 @@
+#unit #smoke
+
 >> Setup
 
   _ = require 'slice'
   send = _.load 'connection.services.send'
 
-  command = _.mock 'commands.models.command'
-  connection = _.mock 'conneciton.models.Connection'
+>> Given some sample data
 
->> When I call parseHost with no arguments
+  command = _.sample 'command.models.Command'
+  callback = -> # do nothing
+  connection = _.sample 'connection.models.Connection'
 
+>> When I call the send service with mock data
 
-  send command, callback, connection
+  result = send command, callback, connection
 
-  {host, port} = parseHost()
+>> It should run ok
 
->> Then it should return the defaults
-
-  host.should.equal config.default.host
-  port.should.equal config.default.port
+  result.should.be.ok
 

@@ -5,5 +5,6 @@ isFunction = (func) ->
   else
     return false
 
+
 module.exports = isFunction
 

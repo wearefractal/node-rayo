@@ -1,3 +1,5 @@
+#unit #smoke
+
 >> Setup
 
   _ = require 'slice'
