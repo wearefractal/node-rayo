@@ -7,7 +7,7 @@
 
 >> Given some sample data
 
-  command = _.sample 'command.models.Command'
+  command = _.sample 'command.models.Dial'
   callback = -> # do nothing
   connection = _.sample 'connection.models.Connection'
 

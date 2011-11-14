@@ -1,7 +1,7 @@
 _ = require 'slice'
 config = _.load 'message.config'
 getRandomId = _.load 'message.services.getRandomId'
-getElementService = _.load 'message.services.getElement'
+getElement = _.load 'message.services.getElement'
 
 class Message
   constructor: ({@rootName, @rootAttributes, @childName, @childAttributes, @sipHeaders, @children}) ->
@@ -16,7 +16,7 @@ class Message
     @childAttributes.xmlns ?= config.xmlns
 
   getId: -> return @rootAttributes.id
-  getElement: (server, jid) -> getElementService @, server, jid
+  getElement: (server, jid) -> getElement @, server, jid
 
 
 module.exports = Message

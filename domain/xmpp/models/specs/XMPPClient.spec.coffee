@@ -9,12 +9,12 @@
 
 >> When we try to make an XMPPClient
 
-  test = new XMPPClient mockConnection
+  client = new XMPPClient mockConnection
 
 >> Then we have a fully wired up xmpp client ready to listen and emit events
 
-  test.xmppClient.host.should.eql "localhost"
-  test.xmppClient.port.should.eql "8080"
-  test.xmppClient.jabberId.should.eql "wearefractal@jabber.org"
-  test.xmppClient.jabberPass.should.eql "jabberPass"
+  client.xmppClient.host.should.eql "localhost"
+  client.xmppClient.port.should.eql "8080"
+  client.xmppClient.jabberId.should.eql "wearefractal@jabber.org"
+  client.xmppClient.jabberPass.should.eql "jabberPass"
 
