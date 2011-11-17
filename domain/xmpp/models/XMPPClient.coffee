@@ -1,32 +1,33 @@
 _ = require 'slice'
-xmpp = _.load 'node-xmpp'
-config = _.load 'connection.config'
+EventEmitter  = _.load('events').EventEmitter
+config        = _.load 'connection.config'
+handleStanza  = _.load 'xmpp.services.handleStanza'
+setStatus     = _.load 'xmpp.services.setStatus'
+parseHost     = _.load 'connection.services.parseHost' # move to xmpp
+callbackQueue = _.load 'xmpp.callbackQueue.models.CallbackQueue'
 
-handleStanza = _.load 'xmpp.services.handleStanza'
-setStatus = _.load 'xmpp.services.setStatus'
+class XMPPClient extends EventEmitter
 
+ constructor: ({@host, @port, @jabberId, @jabberPass, @verbose, @status}) ->
 
-class XMPPClient
- constructor: (@connection) ->
+    @status ?= "I am online"
+    @verbose ?= false
+    {@host, @port} = parseHost @host, @port
 
-    @connection.status ?= "I am online"
+    @callbackQueue = new callbackQueue()
 
   connect: ->
 
-    # connects on creation
-    @xmppClient = new xmpp.Client
-      jid: @connection.jabberId
-      password: @connection.jabberPass
-      host: @connection.server
-      port: @connection.port
+    @xmppClient = createAndConnectXmppClient()
 
     # online
     @xmppClient.on 'online', =>
       console.log 'online'
       @connected = true
-      @xmppClient.on 'stanza', (stanza) => handleStanza stanza, @connection
+      # handle all incoming stanzas
+      @xmppClient.on 'stanza', (stanza) => handleStanza @xmppClient, stanza
       @emit 'connected'
-      setStatus @, @connection.status
+      setStatus @xmppClient, @status
 
     # offline
     @xmppClient.on 'offline', =>
@@ -38,7 +39,6 @@ class XMPPClient
     @xmppClient.on 'error', (err) => @emit 'error', err
 
   disconnect: -> @xmppClient.end()
-
   send: (element) -> @xmppClient.send element
 
 

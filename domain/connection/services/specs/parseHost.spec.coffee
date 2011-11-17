@@ -4,7 +4,6 @@
   parseHost = _.load 'connection.services.parseHost'
   config = _.load 'connection.config'
 
-
 >> When I call parseHost with no arguments
 
   {host, port} = parseHost()
@@ -13,7 +12,6 @@
 
   host.should.equal config.default.host
   port.should.equal config.default.port
-
 
 >> Given a host and a port
 

@@ -1,25 +1,32 @@
 _ = require 'slice'
-EventEmitter = _.load('events').EventEmitter
-xmppClient   = _.load 'xmpp.models.XMPPClient'
-messageQueue = _.load 'message.models.MessageQueue'
-parseHost    = _.load 'connection.services.parseHost'
-send         = _.load 'connection.services.send'
+#EventEmitter  = _.load('events').EventEmitter
+JabClient    = _.load 'xmpp.models.XMPPClient'
+send          = _.load 'connection.services.send'
 
-class Connection extends EventEmitter
+console.log XMPPClient
 
-  constructor: ({@host, @port, @jabberId, @jabberPass, @verbose}) ->
+class Connection extends JabClient
 
-    {@host, @port} = parseHost @host, @port
-    @verbose ?= false
+  constructor: ({@host, @port, @jabberId, @jabberPass, @verbose, @status}) ->
 
-    @xmppClient = new xmppClient @ # inject self
-    @messageQueue = new messageQueue @
+    super arguments
 
-  connect: -> @xmppClient.connect()
-  disconnect: -> @xmppClient.disconnect()
+#    @xmppClient = createXmppClient @
+#    @on '*', (command) -> @xmppClient.handleMessage command.getRaw()
 
-  send: (command, callback) -> send command, callback, @
+#  connect: -> @xmppClient.connect()
+#  disconnect: -> @xmppClient.disconnect()
+
+  send: (command, callback) -> send @xmppClient, command, callback
 
 
 module.exports = Connection
+
+###
+      host: @host
+      port: @port
+      jabberId: @jabberId
+      jabberPass: @jabberPass
+      verbose: @verbose
+      status: @status
 

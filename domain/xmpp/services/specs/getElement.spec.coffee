@@ -1,11 +1,10 @@
 >> Setup
 
   _ = require 'slice'
+  getElement = _.load 'xmpp.services.getElement'
+  Message = _.load 'xmpp.models.Message'
 
-  Message    = _.load 'message.models.Message'
-  getElement = _.load 'message.services.getElement'
-
->> When I try to build a Message
+>> Given a sample Message
 
   message = new Message
     rootName: "presence"
@@ -16,7 +15,10 @@
       xmlns : "jabber:client"
       xmlns:stream : "http://etherx.jabber.org/streams"
     childName: "end"
-  element = getElement(message, "telefonica115.orl.voxeo.net","wearefractal@jabber.org")
+
+>> When I call getElement
+
+  element = getElement message, "telefonica115.orl.voxeo.net", "wearefractal@jabber.org"
 
 >> Then the element should be properly scaffolded
 

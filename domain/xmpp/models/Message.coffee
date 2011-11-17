@@ -1,7 +1,7 @@
 _ = require 'slice'
-config = _.load 'message.config'
-getRandomId = _.load 'message.services.getRandomId'
-getElement = _.load 'message.services.getElement'
+config = _.load 'command.config'
+getRandomId = _.load 'xmpp.services.getRandomId'
+getElement = _.load 'xmpp.services.getElement'
 
 class Message
   constructor: ({@rootName, @rootAttributes, @childName, @childAttributes, @sipHeaders, @children}) ->
@@ -16,7 +16,7 @@ class Message
     @childAttributes.xmlns ?= config.xmlns
 
   getId: -> return @rootAttributes.id
-  getElement: (server, jid) -> getElement @, server, jid
+  getElement: (server, jid) -> getElement server, jid, @
 
 
 module.exports = Message

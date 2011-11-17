@@ -1,12 +1,13 @@
 _ = require 'slice'
-isFunction = _.load 'connection.services.isFunction'
+isFunction = _.load 'util.services.isFunction'
 
-send = (command, callback, connection) ->
+send = (xmppClient, command, callback) ->
 
-  element = command.getElement connection.host, connection.xmppClient.jid
-  if @verbose then console.log 'Sending outbound message: ' + element.toString()
-  if isFunction
-    connection.commandQueue.push command.getId(), callback
+  element = command.getElement xmppClient.host, xmppClient.jid
+
+  if isFunction callback
+    if @verbose then console.log 'Sending outbound message: ' + element.toString()
+    connection.addCommand command.getId(), callback
 
   connection.xmppClient.send element
 

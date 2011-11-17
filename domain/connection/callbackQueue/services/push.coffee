@@ -1,5 +1,5 @@
 _ = require 'slice'
-isFunction = _.load 'connection.services.isFunction'
+isFunction = _.load 'util.services.isFunction'
 
 push = (queue, id, callback) ->
   if isFunction callback
