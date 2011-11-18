@@ -1,15 +1,16 @@
 _ = require 'slice'
 #EventEmitter  = _.load('events').EventEmitter
-JabClient    = _.load 'xmpp.models.XMPPClient'
-send          = _.load 'connection.services.send'
+JabClient  = _.load 'xmpp.models.JabClient'
+send       = _.load 'connection.services.send'
 
 console.log XMPPClient
 
 class Connection extends JabClient
 
   constructor: ({@host, @port, @jabberId, @jabberPass, @verbose, @status}) ->
+     @callbackQueue = new CallbackQueue()
 
-    super arguments
+#    super arguments
 
 #    @xmppClient = createXmppClient @
 #    @on '*', (command) -> @xmppClient.handleMessage command.getRaw()

@@ -1,16 +1,6 @@
-Message = require '../message'
+class Reject
+  constructor: ({@id, @from, @to, @reason = 'decline'}) ->
+    throw new Error 'Missing "id and from and to" parameter' unless @id and @from and @to
 
-class Reject extends Message
-  constructor: ({@offer, @reason}) ->
-    throw new Error 'Missing "offer" parameter' unless @offer
-    @reason ?= 'decline'
-    super 
-      rootName: 'iq'
-      childName: 'reject'
-      rootAttributes: 
-        id: @offer.rootAttributes.id
-        to: @offer.rootAttributes.from
-        from: @offer.rootAttributes.to
-      children: [@reason]
-      
 module.exports = Reject
+

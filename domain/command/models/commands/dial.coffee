@@ -1,15 +1,6 @@
-Message = require '../message'
-
-class Dial extends Message
-  constructor: ({@to, @from}) ->
-    super 
-      rootName: 'iq'
-      childName: 'dial'
-      rootAttributes:
-        to: '$callserver'
-        from: '$localuser'
-      childAttributes: 
-        to: @to
-        from: @from
+class Dial
+   constructor: ({@id, @from, @to}) ->
+    throw new Error 'Missing "id and from and to" parameter' unless @id and @from and @to
 
 module.exports = Dial
+
