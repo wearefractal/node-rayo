@@ -22,7 +22,6 @@ class Connection extends EventEmitter
       port: @port
 
     @xmppClient.on 'online', =>
-      console.log 'online'
       @connected = true
       @xmppClient.on 'stanza', (stanza) => @handleStanza stanza
       @emit 'connected'
@@ -68,15 +67,12 @@ class Connection extends EventEmitter
     @emit stanza.name, stanza # Emits 'iq' or 'presence' with raw stanza
     message = @getMessage stanza
     @emit message.childName, message # Emits command name with formatted stanza
-    console.log message
     @emit 'message', message # Emits 'message' with formatted stanza
 
   #
   handleError: (stanza) ->
     cb = @callbacks[stanza.attrs.id]
-    console.log "callback"
     if cb? and typeof cb is 'function'
-      console.log "cb is a function"
       if stanza.children
         err = (child for child in stanza.children when child.name is 'error')[0]
         if err
