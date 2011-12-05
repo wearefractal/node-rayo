@@ -15,7 +15,10 @@ class Message
     @rootAttributes.id ?= util.getRandomId()
     @childAttributes.xmlns ?= static.xmlns
 
-  getId: -> return @rootAttributes.id
+  getId: -> @rootAttributes.id || @childAttributes.id
+  getTo: -> @rootAttributes.to
+  getFrom: -> @rootAttributes.from
+  
   getElement: (server, jid) ->
     if @rootAttributes.to.indexOf '$callserver' > 0
       @rootAttributes.to = @rootAttributes.to.replace '$callserver', server

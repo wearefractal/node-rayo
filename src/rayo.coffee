@@ -10,6 +10,8 @@ module.exports =
   Unmute: require './command/unmute'
   Hold: require './command/hold'
   Unhold: require './command/unhold'
+  Join: require './command/join'
+  Unjoin: require './command/unjoin'
   Redirect: require './command/redirect'
   Reject: require './command/reject'
   

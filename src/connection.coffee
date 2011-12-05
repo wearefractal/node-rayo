@@ -1,6 +1,7 @@
 path = require 'path'
 static = require './static'
 rayo = require './rayo'
+util = require 'util'
 Message = require './message'
 EventEmitter = require('events').EventEmitter
 
@@ -72,16 +73,11 @@ class Connection extends EventEmitter
   #
   handleError: (stanza) ->
     cb = @callbacks[stanza.attrs.id]
+    err = stanza.children[0]
+    delete err.parent # Remove clutter from LTX element
+    @emit 'error', err
     if cb? and typeof cb is 'function'
-      if stanza.children
-        err = (child for child in stanza.children when child.name is 'error')[0]
-        if err
-          msg = (child for child in err.children when child.name is 'text')[0].children[0]
-          return cb new Error "Type: #{ err.attrs.type }, Message: #{ msg }"
-        else if stanza.children and stanza.children[0].children
-          return cb new Error stanza.children[0].children[0].name
-      else
-        return cb new Error "Generic Error! Stanza: #{ stanza }"
+      return cb new Error err
     else
       console.log 'UNHANDLED ERROR! - ' + stanza
 
