@@ -1,15 +1,6 @@
 rayo = require '../src/rayo'
 log = require 'node-log'
-log.setName 'rayo-test'
-
-###
-  This demo will connect to a server, place a call, and emit various events for that call.
-  It will then place a second call and also emit events for it.
-  After both calls have answered, it will conference them together.
-  Call 1 will then be removed from the conference after 5 seconds
-  If this demo receives a call it will reject it with the reason 'busy'
-  Optionally, you may have it answer the call.
-###
+log.setName 'rayo-example'
   
 conn = new rayo.Connection
   host: 'telefonica115.orl.voxeo.net'
@@ -29,11 +20,8 @@ conn.on 'connected', ->
         log.info "Caller B answered, joining them to conference"
         conn.send new rayo.Join(hoster: callA, joinee: cmd), (err, conference) -> log.debug conference
             
-# Set up function related event handlers      
-conn.on 'offer', (cmd) -> conn.send new rayo.Reject(offer: cmd, reason: 'busy')
+# Set up call related event handlers
 conn.on 'ringing', (cmd) -> log.info "Call #{cmd.getId()} is ringing..."
-conn.on 'answered', (cmd) -> log.info "Call #{cmd.getId()} picked up!"
-conn.on 'dtmf', (cmd) -> log.info "Call #{cmd.getId()} pressed #{cmd.childAttributes.signal}"
 conn.on 'end', (cmd) -> log.info "Call #{cmd.getId()} ended, reason: #{Object.keys(cmd.children)[0]}"
 
 # Connection related events
