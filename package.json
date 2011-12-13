@@ -5,7 +5,7 @@
    "homepage":"http://github.com/wearefractal/node-rayo",
    "repository":"git://github.com/wearefractal/node-rayo.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
-   "main":"./lib/rayo.js",
+   "main":"./domain/rayo.js",
 
    "dependencies":{
       "node-xmpp":"*",

@@ -1,16 +1,18 @@
 _ = require 'slice'
-isFunction = _.load 'util.services.isFunction'
+isFunction = _.load('rzr-util').isFunction
+rayoCommandToStanza = _.load 'commands.rayoCommandToStanza'
 
-send = (xmppClient, command, callback) ->
+send = (xmppClient, callbackRouter, command, verbose, callback) ->
 
-  element = command.getElement xmppClient.host, xmppClient.jid
+  rayoCommandToStanza xmppClient, command, (stanza) ->
 
-  if isFunction callback
-    if @verbose then console.log 'Sending outbound message: ' + element.toString()
-    connection.addCommand command.getId(), callback
+    if isFunction callback
+      if verbose 
+        console.log 'Sending outbound message: ' + stanza.toString()
+      callbackRouter = callbackRouter.push command.id, callback
 
-  connection.xmppClient.send element
+    xmppClient.send stanzaTo
+    return callbackRouter
 
 
 module.exports = send
-
