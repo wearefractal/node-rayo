@@ -17,4 +17,4 @@ To install node-rayo, use [npm](http://github.com/isaacs/npm):
   
 ## Examples
 
-You can view further examples in the [example folder.](https://github.com/wearefractal/node-rayo/tree/master/examples)
+You can view further examples in the [examples folder.](https://github.com/wearefractal/node-rayo/tree/master/examples)

@@ -34,4 +34,4 @@ class ConnectionAgent extends EventEmitter
 
   create: (name, command) -> return new RayoCommand name, command
 
-module.exports = Connection
+module.exports = ConnectionAgent

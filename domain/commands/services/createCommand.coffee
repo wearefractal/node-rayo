@@ -5,6 +5,7 @@ config = _.load 'commands.config'
 
 # Create an outgoing object to be parsed with xmlson
 createCommand = (connection, name, args) ->
+  connection = connection.xmppClient unless connection.jid? # node-xmpp stupid hack
   args.xmlns ?= config.xmlns
   command = {}
   # Root message attributes

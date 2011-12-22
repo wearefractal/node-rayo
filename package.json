@@ -8,16 +8,14 @@
    "main":"./domain/rayo.js",
 
    "dependencies":{
-      "node-xmpp":"*",
+      "coffee-script":"*",
       "rzr-util":"*",
       "slice":"*",
       "modulate":"*",
-      "jab":"*",
-      "CallbackRouter":"*"
+      "jab":"*"
    },
    "devDependencies":{
       "node-log":"*",
-      "coffee-script":"*",
       "should":"*"
    },
    "engines":{

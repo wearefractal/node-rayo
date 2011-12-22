@@ -1,21 +1,29 @@
-#unit #smoke
+#>> Setup
 
->> Setup
+_ = require('slice') __dirname
+should = require 'should'
+handleRayoMessage = _.load 'connection.send'
+{EventEmitter} = _.load 'events'
+xmpp = new EventEmitter
 
-  _ = require 'slice'
-  send = _.load 'connection.services.send'
+#>> Given a test offer message
 
->> Given some sample data
+offer = {"presence":{"@to":"9001@cool.com/1","@from":"call57@test.net/1","offer":{"@xmlns":"urn:xmpp:rayo:1","@to":"tel:+18003211212","@from":"tel:+13058881212","header":[{"@name":"Via","@value":"192.168.0.1"},{"@name":"Contact","@value":"192.168.0.1"}]}}}
 
-  command = _.sample 'command.models.Dial'
-  callback = -> # do nothing
-  connection = _.sample 'connection.models.Connection'
+#>> When I call handleRayoMessage
 
->> When I call the send service with mock data
+xmpp.on 'call57', (name, cmd) -> cmd.should.be.ok
+conn.on 'offer', (cmd) -> cmd.should.be.ok
 
-  result = send command, callback, connection
+handleRayoMessage eventRouter, xmpp, offer
 
->> It should run ok
+#>> Given a test result message
 
-  result.should.be.ok
+res = {"iq":{"@id":"123456", "@type":"result", "@to":"9001@cool.net/1", "@from":"test.net", "ref":{"@id":"call57"}}}
 
+#>> When I call handleRayoMessage
+
+xmpp.on '123456', (name, cmd) -> cmd.should.be.ok
+conn.on 'ref', (cmd) -> cmd.should.be.ok
+
+handleRayoMessage eventRouter, xmpp, res

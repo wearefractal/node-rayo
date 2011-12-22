@@ -1,4 +1,4 @@
-rayo = require '../src/rayo'
+rayo = require '../domain/rayo'
 log = require 'node-log'
 log.setName 'rayo-test'
 
@@ -11,17 +11,14 @@ conn = new rayo.Connection
 conn.on 'error', (err) -> log.error err.message
 conn.on 'connected', ->
   log.info 'Connected!'
-  conn.send new rayo.Dial(to: 'sip:codexrex@sip2sip.info', from: 'sip:test@whadupdoe.net'), (err, resp) ->
-    log.info 'Call placed. ID: ' + resp.childAttributes.id
-
-    conn.on 'ringing', (cmd) -> log.info 'Call ' + resp.childAttributes.id + ' is ringing...'
-    conn.on 'answered', (cmd) -> log.info 'Call ' + resp.childAttributes.id + ' picked up!'
-    conn.on 'dtmf', (cmd) -> log.info 'Call ' + resp.childAttributes.id + ' pressed ' + cmd.childAttributes.signal
-    conn.on 'end', (cmd) -> log.info 'Call ended, reason: ' + Object.keys(cmd.children)[0]
-
+  
+  dial = conn.create 'dial', {to: 'sip:contracontra@sip2sip.info', from: 'sip:node-rayo@test.net'}
+  dial.on 'ringing', (cmd) -> console.log "ringing resp: #{cmd}"
+  conn.send dial, (cmd) -> console.log "dial resp: #{cmd}"
+  
   conn.on 'offer', (cmd) ->
-    #conn.send new rayo.Answer offer: cmd
-    conn.send new rayo.Reject offer: cmd, reason: 'busy'
+    reject = conn.create 'reject', {callid: cmd.callid, busy:{}}
+    conn.send reject, (cmd) -> console.log "reject resp: #{cmd}"
 
 conn.on 'disconnected', -> log.info 'Connection closed'
 
