@@ -1,5 +1,6 @@
 _ = require('slice') __dirname
 RayoCommand = _.load 'commands.RayoCommand'
+generateId = _.load 'commands.generateId'
 config = _.load 'commands.config'
 
 # Create an outgoing object to be parsed with xmlson
@@ -7,7 +8,7 @@ createCommand = (connection, name, args) ->
   args.xmlns ?= config.xmlns
   command = {}
   # Root message attributes
-  command['@id'] = '123456' # TODO: Generate message id
+  command['@id'] = generateId() # '123456'
   command['@type'] = 'set'
   command['@to'] = if args.callid? then "#{args.callid}@#{connection.host}/1" else connection.host
   command['@from'] = "#{connection.jid.user}@#{connection.jid.domain}/#{connection.jid.resource}"

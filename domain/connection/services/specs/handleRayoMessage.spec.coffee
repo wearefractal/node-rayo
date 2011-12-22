@@ -1,24 +1,19 @@
 #>> Setup
 
-  _ = require 'slice'
-  should = require 'should'
-  handleRayoMessage = _.load 'connection.handleRayoMessage'
-  EventEmitter = _.load('events').EventEmitter
+_ = require('slice') __dirname
+should = require 'should'
+handleRayoMessage = _.load 'connection.handleRayoMessage'
+{EventEmitter} = _.load 'events'
+xmpp = new EventEmitter
+conn = new EventEmitter
 
-#>> Given an EventEmitter, a callbackRouter and a message
+#>> Given a test offer message
 
-  ee        = new EventEmitter() 
-  cbRouter  =
-    call: (id) -> # nada
-  msg       = "foo"
-
-  ee.on 'some.command', (command) ->
-    console.log 'some command'
-#  >> c
+offer = {"presence":{"@to":"9001@cool.com/1","@from":"call57@test.net/1","offer":{"@xmlns":"urn:xmpp:rayo:1","@to":"tel:+18003211212","@from":"tel:+13058881212","header":[{"@name":"Via","@value":"192.168.0.1"},{"@name":"Contact","@value":"192.168.0.1"}]}}}
 
 #>> When I call handleRayoMessage
 
-  cbRouter = handleRayoMessage ee, cbRouter, msg
+xmpp.on 'call57', (cb) -> cb.should.be.ok
+conn.on 'offer', (cb) -> cb.should.be.ok
 
-  console.log cbRouter
-#>> 
+handleRayoMessage conn, xmpp, offer

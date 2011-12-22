@@ -1,6 +1,5 @@
 _ = require('slice') __dirname
 config = _.load 'commands.config'
-RayoCommand = _.load 'commands.RayoCommand'
 
 parseCommand = (message) ->
   cmd = message.iq || message.presence

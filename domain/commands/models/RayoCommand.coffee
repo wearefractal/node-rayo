@@ -1,10 +1,13 @@
-{EventEmitter} = require 'events'
+_ = require('slice') __dirname
+{EventEmitter} = _.load 'events'
+createCommand = _.load 'commands.createCommand'
 
 class RayoCommand extends EventEmitter
-  constructor: (connection, @messageName, @message) ->
-    @[prop] = val for prop, val of @message
-    connection.on @id, (cmd) => @emit Object.keys(cmd)[0], cmd # When connection emits id relevant, re-emit command with proper message name
-
-  getElement: ->
+  constructor: (@messageName, @message) ->
+    @[prop] = val for prop, val of @message # Extend message
     
+  getElement: (xmpp) -> # This gets called on send to form the actual command
+    xmpp.on @id, (cmd) => @emit Object.keys(cmd)[0], cmd # When connection emits id relevant, re-emit command with proper message name
+    return createCommand xmpp, @messageName, @mesage
+
 module.export = RayoCommand

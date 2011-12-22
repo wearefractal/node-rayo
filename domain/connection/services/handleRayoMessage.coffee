@@ -1,19 +1,11 @@
-_ = require 'slice'
-stanzaToRayoCommand = _.load 'commands.stanzaToRayoCommand'
+_ = require('slice') __dirname
+parseCommand = _.load 'commands.parseCommand'
 
-handleRayoMessage = (eventRouter, callbackRouter, stanza) ->
-
-  if stanza.attrs.type is 'error'
-    # handleRayoError
-    # does this affect callback routing?
-  else
-    stanzaToRayoCommand stanza, (command) ->
-      callbackRouter = callbackRouter.call command.id
-      eventRouter.emit 'repeat'
-        name: command.name
-        object: command
-
-  return callbackRouter
-
-
+handleRayoMessage = (connection, xmpp, stanza) ->
+  cmd = parseCommand stanza
+  return unless cmd? # Drop message if parsing failed
+  name = Object.keys(cmd)[0]
+  xmpp.emit cmd.id, cmd
+  connection.emit name, cmd
+  
 module.exports = handleRayoMessage
