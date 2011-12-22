@@ -1,22 +1,18 @@
 _ = require 'slice'
 
 EventEmitter   = _.load('events').EventEmitter
-CallbackRouter = _.load 'CallbackRouter'
 Jab            = _.load 'jab'
 
 handleRayoMessage = _.load 'connection.handleRayoMessage'
-
+createMessage = _.load 'commands.createMessage'
+parseMessage = _.load 'commands.parseMessage'
 
 class ConnectionAgent extends EventEmitter
 
   constructor: (@connection) ->
 
-    #@connection = checkConnection connection    
-
     ## Collaborators
     
-    @callbackRouter = new CallbackRouter()
-    @eventRouter = new EventEmitter()
     @xmpp = new Jab connection
 
     ## Events
@@ -31,12 +27,13 @@ class ConnectionAgent extends EventEmitter
 
   ## Services
 
-  connect:    -> @xmpp.connect()
+  connect: -> @xmpp.connect()
   disconnect: -> @xmpp.disconnect()
 
   send: (command, callback) -> 
     @callbackRouter = send @xmpp, @callbackRouter, command, @connection.status, callback 
 
-
+  create: (name, command) ->
+    return createCommand @, name, command
 
 module.exports = Connection

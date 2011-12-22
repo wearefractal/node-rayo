@@ -5,7 +5,7 @@ RayoCommand = _.load 'commands.RayoCommand'
 parseCommand = (message) ->
   cmd = message.iq || message.presence
   return null unless cmd? # If message isn't iq or presence then drop it
-  callid = cmd['@from']?.split('@')[0] # Parse callid from root @from attr
+  callid = cmd['@from']?.split('@')[0] if cmd['@from']?.indexOf('@') > -1# Parse callid from root @from attr
   out = {}
   for key, value of cmd
     if typeof value is 'object' # Main command, should be first key/val
