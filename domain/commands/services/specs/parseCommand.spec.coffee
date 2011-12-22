@@ -24,4 +24,4 @@ resCmd = parseCommand {"iq":{"@id":"123456", "@type":"result", "@to":"9001@cool.
 
 #>> Then
 
-resCmd.should.eql "ref":{"id":"call57"}
+resCmd.should.eql "ref":{"msgid":"123456", "id":"call57"}

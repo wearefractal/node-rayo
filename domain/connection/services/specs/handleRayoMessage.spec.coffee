@@ -6,6 +6,8 @@ handleRayoMessage = _.load 'connection.handleRayoMessage'
 {EventEmitter} = _.load 'events'
 xmpp = new EventEmitter
 conn = new EventEmitter
+eventRouter = new EventEmitter
+eventRouter.on 'emit', (name, args...) -> conn.emit name, args
 
 #>> Given a test offer message
 
@@ -13,7 +15,18 @@ offer = {"presence":{"@to":"9001@cool.com/1","@from":"call57@test.net/1","offer"
 
 #>> When I call handleRayoMessage
 
-xmpp.on 'call57', (cb) -> cb.should.be.ok
-conn.on 'offer', (cb) -> cb.should.be.ok
+xmpp.on 'call57', (name, cmd) -> cmd.should.be.ok
+conn.on 'offer', (cmd) -> cmd.should.be.ok
 
-handleRayoMessage conn, xmpp, offer
+handleRayoMessage eventRouter, xmpp, offer
+
+#>> Given a test result message
+
+res = {"iq":{"@id":"123456", "@type":"result", "@to":"9001@cool.net/1", "@from":"test.net", "ref":{"@id":"call57"}}}
+
+#>> When I call handleRayoMessage
+
+xmpp.on '123456', (name, cmd) -> cmd.should.be.ok
+conn.on 'ref', (cmd) -> cmd.should.be.ok
+
+handleRayoMessage eventRouter, xmpp, res

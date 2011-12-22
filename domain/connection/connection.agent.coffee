@@ -1,4 +1,4 @@
-_ = require 'slice'
+_ = require('slice') __dirname
 
 {EventEmitter} = _.load 'events'
 Jab = _.load 'jab'
@@ -19,11 +19,12 @@ class ConnectionAgent extends EventEmitter
     
     ## Events
 
-    @xmpp.on 'stanza', (stanza) -> handleRayoMessage @xmpp, stanza  
+    @xmpp.on 'stanza', (stanza) -> handleRayoMessage @eventRouter, @xmpp, stanza  
     @xmpp.on 'connected', -> @emit 'connected'
     @xmpp.on 'disconnected', -> @emit 'disconnected'
     @xmpp.on 'error', (error) -> @emit 'error', error
-
+    @eventRouter.on 'emit', (name, args...) -> @emit name, args
+    
   ## Services
 
   connect: -> @xmpp.connect()
