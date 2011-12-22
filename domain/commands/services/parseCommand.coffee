@@ -1,6 +1,22 @@
-RayoCommand = require '../commands/RayoCommand'
+_ = require('slice') __dirname
+config = _.load 'commands.config'
+RayoCommand = _.load 'commands.RayoCommand'
 
-parseCommand = (obj) ->
-  
+parseCommand = (message) ->
+  cmd = message.iq || message.presence
+  return null unless cmd? # If message isn't iq or presence then drop it
+  callid = cmd['@from']?.split('@')[0] # Parse callid from root @from attr
+  out = {}
+  for key, value of cmd
+    if typeof value is 'object' # Main command, should be first key/val
+      out[key] = {}
+      out[key].callid = callid if callid?
+      out[key][k.replace('@', '')] = v for k, v of value when v isnt config.xmlns
+      if out[key].header? # Format headers
+        for obj in out[key].header
+          obj[obj['@name']] = obj['@value']
+          delete obj['@name']
+          delete obj['@value']
+  return out
   
 module.exports = parseCommand

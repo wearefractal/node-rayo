@@ -12,7 +12,7 @@ connection =
 
 #>> Given arguments for an outgoing dial command
 
-cmd = createCommand connection, 'dial', {to:"tel:+13055195825", from:"tel:+14152226789", header:["x-skill":"agent", "x-customer-id":"8877"]}
+cmd = createCommand connection, 'dial', {to:"tel:+13055195825", from:"tel:+14152226789", header:[{"x-skill":"agent"}, {"x-customer-id":"8877"}]}
 
 #>> Then
 
