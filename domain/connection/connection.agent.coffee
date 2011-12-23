@@ -1,9 +1,9 @@
 {EventEmitter} = require 'events'
 Jab = require 'jab'
 
-RayoCommand = require '../commands/models/RayoCommand'
+RayoCommand       = require '../commands/models/RayoCommand'
 handleRayoMessage = require './services/handleRayoMessage'
-sendRayoMessage = require './services/sendRayoMessage'
+sendRayoMessage   = require './services/sendRayoMessage'
 
 class ConnectionAgent extends EventEmitter
 
@@ -14,7 +14,8 @@ class ConnectionAgent extends EventEmitter
     @eventRouter = new EventEmitter
     
     ## Events
-    @xmpp.on 'stanza', (stanza) => handleRayoMessage @eventRouter, @xmpp, stanza  
+    @xmpp.on 'stanza', (stanza) => 
+      handleRayoMessage @eventRouter, @xmpp, stanza  
     @xmpp.on 'connected', => @emit 'connected'
     @xmpp.on 'disconnected', => @emit 'disconnected'
     @xmpp.on 'error', (error) => @emit 'error', error
@@ -28,5 +29,6 @@ class ConnectionAgent extends EventEmitter
   send: (command, callback) -> sendRayoMessage @xmpp, command, callback
 
   create: (name, command) -> return new RayoCommand name, command
+
 
 module.exports = ConnectionAgent
