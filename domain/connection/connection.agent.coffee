@@ -28,7 +28,7 @@ class ConnectionAgent extends EventEmitter
 
   send: (command, callback) -> sendRayoMessage @xmpp, command, callback
 
-  create: (name, command) -> return new RayoCommand name, command
+  create: (name, command) -> return new RayoCommand @xmpp, name, command
 
 
 module.exports = ConnectionAgent

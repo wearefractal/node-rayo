@@ -8,7 +8,7 @@ handleRayoMessage = (eventRouter, xmpp, stanza) ->
   name = keys[0]
   msg = cmd[name]
   console.log "Incoming #{name}: #{JSON.stringify(msg)}"
-  return xmpp.ping() if name is 'ping'
+  # return xmpp.ping() if name is 'ping'
   xmpp.emit msg.msgid, cmd if msg.msgid? # Emit messageId for callback queue
   xmpp.emit msg.callid, cmd if msg.callid? # Emit call id
   eventRouter.emit 'emit', name, msg # Emit command name from agent
