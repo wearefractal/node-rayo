@@ -8,7 +8,7 @@ class RayoCommand extends EventEmitter
     @[prop] = val for prop, val of @message # Extend message
     
   getElement: (xmpp) -> # This gets called on send to form the actual command
-    xmpp.once @msgid, (name, cmd) => @emit name, cmd if callid? # Single response event
+    xmpp.once @msgid, (name, cmd) => @emit name, cmd if callid? # Sets off the callback queue
     xmpp.on @callid, (name, cmd) => @emit name, cmd if callid? # All relevant call events
     return createCommand xmpp, @messageName, @message
 
