@@ -2,8 +2,8 @@
    "name":"node-rayo",
    "description":"NodeJS client for the popular Rayo protocol",
    "version":"0.0.1",
-   "homepage":"http://github.com/wearefractal/node-rayo",
-   "repository":"git://github.com/wearefractal/node-rayo.git",
+   "homepage":"http://github.com/rayo/node-rayo",
+   "repository":"git://github.com/rayo/node-rayo.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
    "main":"./rayo.js",
 
