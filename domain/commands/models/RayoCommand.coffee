@@ -14,11 +14,12 @@ class RayoCommand extends EventEmitter
       @xmpp.once @msgid, (name, cmd) => @emit name, cmd
       
     return createCommand @xmpp, @messageName, @message
-  
-  # Listen for call events and re-emit them
-  listen: (callid) ->
-    callid ?= @callid # If no callid passed in, check for local
-    if callid?
-      @xmpp.on callid, (name, cmd) => @emit name, cmd
+      
+  # Listen for call/component events and re-emit them
+  listen: (id) ->
+    id ?= @callid # If no callid passed in, check for local
+    id ?= @componentid # If no callid passed in, check for local
+    if id?
+      @xmpp.on id, (name, cmd) => @emit name, cmd
 
 module.exports = RayoCommand

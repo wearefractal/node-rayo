@@ -4,6 +4,7 @@ parseCommand = (message) ->
   cmd = message.iq || message.presence
   return null unless cmd? # If message isn't iq or presence then drop it
   callid = cmd['@from']?.split('@')[0] if cmd['@from']?.indexOf('@') > -1 # Parse callid from root @from attr
+  componentid = cmd['@from']?.split('/')[1] if cmd['@from']?.indexOf('/') > 0 # Parse componentid from root @from attr
   msgid = cmd['@id']
   out = {}
   for key, value of cmd
@@ -11,6 +12,7 @@ parseCommand = (message) ->
       out[key] = {}
       out[key].msgid = msgid if msgid?
       out[key].callid = callid if callid?
+      out[key].componentid = componentid if componentid? and componentid isnt '1'
       out[key][k.replace('@', '')] = v for k, v of value when v isnt config.xmlns
       if out[key].header? # Format headers
         for obj in out[key].header

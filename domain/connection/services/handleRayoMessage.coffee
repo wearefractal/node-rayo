@@ -12,7 +12,7 @@ handleRayoMessage = (eventRouter, xmpp, stanza) ->
   ## Clean up the object returned
   name = keys[0]
   msg = cmd[name]
-  msg.rayoMessageType = name
+  msg.msgtype = name
   
   # console.log "Incoming #{name}: #{JSON.stringify(msg)}"
   
@@ -21,7 +21,10 @@ handleRayoMessage = (eventRouter, xmpp, stanza) ->
     
   if msg.callid? # Emit call id
     xmpp.emit msg.callid, name, msg
-    
+  
+  if msg.componentid? # Emit call id
+    xmpp.emit msg.componentid, name, msg
+      
   eventRouter.emit 'emit', name, msg # Emit command name from agent
   
 module.exports = handleRayoMessage
