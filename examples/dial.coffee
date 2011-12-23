@@ -1,13 +1,10 @@
 rayo = require '../rayo'
+rayoConfig = require './config'
 log = require 'node-log'
 log.setName 'rayo-test'
 
 # Create a connection object
-conn = new rayo.Connection
-  host: 'telefonica115.orl.voxeo.net'
-  jabberId: 'wearefractal@jabber.org'
-  jabberPass: 'ill4jabber'
-  ping: true
+conn = new rayo.Connection rayoConfig
 
 conn.on 'connected', ->
   log.info 'Connected!'
