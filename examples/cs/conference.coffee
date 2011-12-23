@@ -34,7 +34,7 @@ conn.on 'connected', ->
             'call-id': call2.callid
             direction: 'duplex'
             media: 'bridge'
-          conn.send join, (cmd) -> console.log "WAT: #{JSON.stringify(cmd)}"
+          conn.send join, (cmd) -> log.info "Calls joined into conference"
 
 # Set up connection related event handlers
 conn.on 'disconnected', -> log.info 'Connection closed'
