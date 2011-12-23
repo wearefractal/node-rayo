@@ -14,7 +14,7 @@ class ConnectionAgent extends EventEmitter
     @eventRouter = new EventEmitter
     
     ## Events
-    @xmpp.on 'stanza', (stanza) => 
+    @xmpp.on 'stanza', (stanza) =>
       handleRayoMessage @eventRouter, @xmpp, stanza  
     @xmpp.on 'connected', => @emit 'connected'
     @xmpp.on 'disconnected', => @emit 'disconnected'
