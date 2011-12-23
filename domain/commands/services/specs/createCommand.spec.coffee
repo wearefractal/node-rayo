@@ -3,11 +3,13 @@
 should = require 'should'
 createCommand = require '../createCommand'
 connection =
-  host: 'test.net'
-  jid:
-    user: '9001'
-    domain: 'cool.com'
-    resource: '1'
+  connection:
+    host: 'test.net'
+  xmppClient:
+    jid:
+      user: '9001'
+      domain: 'cool.com'
+      resource: '1'
 
 #>> Given arguments for an outgoing dial command
 
