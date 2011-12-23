@@ -6,6 +6,8 @@ conn = new rayo.Connection
   host: 'telefonica115.orl.voxeo.net'
   jabberId: 'wearefractal@jabber.org'
   jabberPass: 'ill4jabber'
+  debug: true
+  ping: true
 
 conn.on 'error', (err) -> log.error err.message
 conn.on 'connected', ->
@@ -13,7 +15,7 @@ conn.on 'connected', ->
 
   dial = conn.create 'dial',
     to: 'sip:contracontra@sip2sip.info'
-    from: 'sip:node-rayo@test.net'
+    from: 'sip:rayo@test.net'
 
   dial.on 'ringing', (cmd) -> console.log "ringing resp: #{cmd}"
   dial.on 'answered', (cmd) -> console.log "answered resp: #{cmd}"
