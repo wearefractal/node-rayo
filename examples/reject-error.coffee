@@ -12,11 +12,15 @@ conn.on 'connected', ->
   # Listen for offer command
   conn.on 'offer', (cmd) ->
     log.info "Incoming call..."
+    accept = conn.create 'accept', callid: cmd.callid
     reject = conn.create 'reject', 
       callid: cmd.callid
       error:{}
       header:[{"x-error-detail":"some descriptive error message"}]
+    
+    conn.send accept
     conn.send reject
+    log.info "Rejected call with error"
 
 # Set up connection related event handlers
 conn.on 'disconnected', -> log.info 'Connection closed'

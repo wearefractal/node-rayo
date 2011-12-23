@@ -14,10 +14,9 @@ conn.on 'connected', ->
     log.info "Incoming call..."
     accept = conn.create 'accept', callid: cmd.callid
     answer = conn.create 'answer', callid: cmd.callid
-    conn.send accept, (cmd) ->
-      console.log cmd
-      conn.send answer, (cmd) ->
-        log.info "Answered call!"
+    conn.send accept
+    conn.send answer
+    log.info "Answered call!"
 
 # Set up connection related event handlers
 conn.on 'disconnected', -> log.info 'Connection closed'

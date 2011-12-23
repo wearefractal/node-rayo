@@ -11,9 +11,13 @@ conn.on 'connected', ->
   
   # Listen for offer command
   conn.on 'offer', (cmd) ->
+    accept = conn.create 'accept', callid: cmd.callid
     log.info "Incoming call..."
     reject = conn.create 'reject', callid: cmd.callid, busy:{}
+    
+    conn.send accept
     conn.send reject
+    log.info "Rejected call with busy"
 
 # Set up connection related event handlers
 conn.on 'disconnected', -> log.info 'Connection closed'
