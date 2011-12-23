@@ -19,7 +19,7 @@ class ConnectionAgent extends EventEmitter
     @xmpp.on 'connected', => @emit 'connected'
     @xmpp.on 'disconnected', => @emit 'disconnected'
     @xmpp.on 'error', (error) => @emit 'error', error
-    @eventRouter.on 'emit', (event, args...) => @emit event, args
+    @eventRouter.on 'emit', (event, args) => @emit event, args
     
   ## Services
 

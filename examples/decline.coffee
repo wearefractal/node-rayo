@@ -12,7 +12,7 @@ conn.on 'connected', ->
   # Listen for offer command
   conn.on 'offer', (cmd) ->
     log.info "Incoming call..."
-    reject = rayo.create 'reject', {callid: cmd.callid, decline:{}}
+    reject = conn.create 'reject', callid: cmd.callid, decline:{}
     conn.send reject
 
 # Set up connection related event handlers

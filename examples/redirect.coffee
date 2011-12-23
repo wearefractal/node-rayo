@@ -12,7 +12,11 @@ conn.on 'connected', ->
   # Listen for offer command
   conn.on 'offer', (cmd) ->
     log.info "Incoming call..."
-    redirect = rayo.create 'reject', {callid: cmd.callid, redirect:{to:'tel:+14152226789'}, header:[{"x-skill":"agent"}, {"x-customer-id":"8877"}]}
+    redirect = conn.create 'reject',
+      callid: cmd.callid
+      redirect: 
+        to: 'tel:+14152226789'
+      header:[{"x-skill":"agent"}, {"x-customer-id":"8877"}]
     conn.send redirect
 
 # Set up connection related event handlers
