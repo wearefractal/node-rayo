@@ -22,7 +22,7 @@ handleRayoMessage = (eventRouter, xmpp, stanza) ->
   if msg.callid? # Emit call id
     xmpp.emit msg.callid, name, msg
   
-  if msg.componentid? # Emit call id
+  if msg.componentid? # Emit component id
     xmpp.emit msg.componentid, name, msg
       
   eventRouter.emit 'emit', name, msg # Emit command name from agent
