@@ -9,7 +9,7 @@
 
    "dependencies":{
       "coffee-script":"*",
-      "jab":">= 0.0.7"
+      "jab":"*"
    },
    "devDependencies":{
       "node-log":"*",
