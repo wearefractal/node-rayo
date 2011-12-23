@@ -19,6 +19,7 @@ class RayoCommand extends EventEmitter
   listen: (id) ->
     id ?= @callid # If no callid passed in, check for local
     id ?= @componentid # If no callid passed in, check for local
+    
     if id?
       @xmpp.on id, (name, cmd) => @emit name, cmd
 
