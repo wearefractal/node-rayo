@@ -19,7 +19,7 @@ conn.on 'connected', ->
   conn.on 'offer', (cmd) ->
     reject = conn.create 'reject', {callid: cmd.callid, busy:{}}
     conn.send reject, (cmd) -> console.log "reject resp: #{cmd}"
-
+  
 conn.on 'disconnected', -> log.info 'Connection closed'
 
 conn.connect()
