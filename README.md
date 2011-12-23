@@ -13,13 +13,15 @@ sudo apt-get install libicu-dev
     
 To install and use node-rayo, use [npm](http://github.com/isaacs/npm):
 
-`$ npm install node-rayo`
+    $ npm install node-rayo
 
 ## Usage
 
 Include node-rayo:
 
-`var rayo = require('node-rayo');`
+```javascript
+var rayo = require('node-rayo');
+```
 
 To get started, create a connection with `rayo.Connection()`:
 
