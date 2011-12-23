@@ -9,6 +9,7 @@ conn = new rayo.Connection rayoConfig
 conn.on 'connected', ->
   log.info 'Connected!'
   
+  conn.send conn.create 'wat', {wat: 'wat'}
   # Listen for offer command
   conn.on 'offer', (cmd) ->
     log.info "Incoming call..."
