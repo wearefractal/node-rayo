@@ -15,9 +15,6 @@
       "node-log":"*",
       "should":"*"
    },
-   "scripts":{
-      "build-examples":"coffee -o ./examples/js -c ./examples/cs"
-   },
    "engines":{
       "node":">= 0.4.0"
    }
