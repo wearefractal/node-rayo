@@ -30,7 +30,7 @@ conn = new rayo.Connection({
   host: 'prism.host.com',
   jabberId: 'youruser@jabber.org',
   jabberPass: 'pass',
-  debug: off,
+  debug: false,
   ping: true   
 });
 ```
