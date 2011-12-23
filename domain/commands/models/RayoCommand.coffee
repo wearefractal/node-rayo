@@ -11,13 +11,17 @@ class RayoCommand extends EventEmitter
   getElement: -> 
 
     # Sets off the callback queue
-    @xmpp.once @msgid, (name, cmd) => @emit name, cmd if callid? 
-    @listen(@callid) if @callid? 
+    if @msgid?
+      @xmpp.once @msgid, (name, cmd) => @emit name, cmd
+        
+    if @callid?    
+      @listen(@callid)
  
     return createCommand @xmpp, @messageName, @message
   
   # Listen for call events and re-emit them
   listen: (callid) ->
-    @xmpp.on callid, (name, cmd) => @emit name, cmd if callid?
+    if callid?
+      @xmpp.on callid, (name, cmd) => @emit name, cmd
 
 module.exports = RayoCommand

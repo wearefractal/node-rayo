@@ -14,17 +14,14 @@ conn.on 'connected', ->
   log.info 'Connected!'
 
   dial = conn.create 'dial',
-    to: 'tel:+14802525373'
-    from: 'tel:+14802525372'
-    ###
     to: 'sip:contracontra@sip2sip.info'
     from: 'sip:rayo@test.net'
-    ###
+
   dial.on 'ringing', (cmd) -> log.info "Call ringing..."
   dial.on 'answered', (cmd) -> log.info "Call answered!"
   dial.on 'end', (cmd) -> log.info "Call ended"
   conn.send dial, (cmd) -> 
-    dial.listen(cmd.ref.id)
+    dial.listen cmd.ref.id
     log.info "Call placed with ID: #{cmd.ref.id}"
 
     
