@@ -1,4 +1,4 @@
-rayo = require '../domain/rayo'
+rayo = require '../rayo'
 log = require 'node-log'
 log.setName 'rayo-test'
 

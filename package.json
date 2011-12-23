@@ -1,7 +1,7 @@
 {
    "name":"node-rayo",
    "description":"NodeJS client for the popular Rayo protocol",
-   "version":"0.0.1",
+   "version":"0.0.2",
    "homepage":"http://github.com/wearefractal/node-rayo",
    "repository":"git://github.com/wearefractal/node-rayo.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
@@ -10,9 +10,8 @@
    "dependencies":{
       "coffee-script":"*",
       "rzr-util":"*",
-      "slice":"*",
-      "modulate":"*",
-      "jab":"*"
+      "slice":">= 0.0.5",
+      "jab":">= 0.0.7"
    },
    "devDependencies":{
       "node-log":"*",
