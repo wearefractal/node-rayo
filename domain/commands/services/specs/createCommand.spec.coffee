@@ -1,8 +1,7 @@
 #>> Setup
 
-_ = require('slice') __dirname
-should = _.load 'should'
-createCommand = _.load 'commands.createCommand'
+should = require 'should'
+createCommand = require '../createCommand'
 connection =
   host: 'test.net'
   jid:

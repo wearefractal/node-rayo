@@ -1,9 +1,8 @@
 #>> Setup
 
-_ = require('slice') __dirname
 should = require 'should'
-handleRayoMessage = _.load 'connection.handleRayoMessage'
-{EventEmitter} = _.load 'events'
+handleRayoMessage = require '../handleRayoMessage'
+{EventEmitter} = require 'events'
 xmpp = new EventEmitter
 conn = new EventEmitter
 eventRouter = new EventEmitter

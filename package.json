@@ -9,8 +9,6 @@
 
    "dependencies":{
       "coffee-script":"*",
-      "rzr-util":"*",
-      "slice":">= 0.0.5",
       "jab":">= 0.0.7"
    },
    "devDependencies":{

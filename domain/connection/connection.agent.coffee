@@ -1,18 +1,16 @@
-_ = require('slice') __dirname
+{EventEmitter} = require 'events'
+Jab = require 'jab'
 
-{EventEmitter} = _.load 'events'
-Jab = _.load 'jab'
-
-RayoCommand = _.load 'commands.RayoCommand'
-handleRayoMessage = _.load 'connection.handleRayoMessage'
-sendRayoMessage = _.load 'connection.sendRayoMessage'
+RayoCommand = require '../commands/models/RayoCommand'
+handleRayoMessage = require './services/handleRayoMessage'
+sendRayoMessage = require './services/sendRayoMessage'
 
 class ConnectionAgent extends EventEmitter
 
   constructor: (@connection) ->
 
     ## Collaborators
-    @xmpp = new Jab connection
+    @xmpp = new Jab @connection
     @eventRouter = new EventEmitter
     
     ## Events

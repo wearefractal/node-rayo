@@ -1,8 +1,7 @@
 #>> Setup
 
-_ = require('slice') __dirname
-should = _.load 'should'
-parseCommand = _.load 'commands.parseCommand'
+should = require 'should'
+parseCommand = require '../parseCommand'
 connection =
   host: 'test.net'
   jid:

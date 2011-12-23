@@ -23,4 +23,3 @@ conn.on 'connected', ->
 conn.on 'disconnected', -> log.info 'Connection closed'
 
 conn.connect()
-

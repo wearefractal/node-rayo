@@ -1,5 +1,4 @@
-_ = require('slice') __dirname
-RayoCommand = _.load 'commands.RayoCommand'
+RayoCommand = require '../../commands/models/RayoCommand'
 
 sendRayoMessage = (xmpp, cmd, callback) ->
   return null unless cmd instanceof RayoCommand

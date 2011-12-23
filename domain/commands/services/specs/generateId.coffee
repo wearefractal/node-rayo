@@ -1,8 +1,7 @@
 #>> Setup
 
-_ = require('slice') __dirname
-should = _.load 'should'
-generateId = _.load 'commands.generateId'
+should = require 'should'
+generateId = require '../generateId'
 
 #>> When generateId is called twice
 

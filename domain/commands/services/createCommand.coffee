@@ -1,19 +1,19 @@
-_ = require('slice') __dirname
-RayoCommand = _.load 'commands.RayoCommand'
-generateId = _.load 'commands.generateId'
-config = _.load 'commands.config'
+RayoCommand = require '../models/RayoCommand'
+config = require '../config'
 
 # Create an outgoing object to be parsed with xmlson
 createCommand = (connection, name, args) ->
-  connection = connection.xmppClient unless connection.jid? # node-xmpp stupid hack
+  xmpp = connection.xmppClient # node-xmpp client
+  connection = connection.connection # Args passed into agent constructor
   args.xmlns ?= config.xmlns
   command = {}
   # Root message attributes
-  command['@id'] = generateId() # '123456'
+  command['@id'] = args.msgid # '123456'
   command['@type'] = 'set'
   command['@to'] = if args.callid? then "#{args.callid}@#{connection.host}/1" else connection.host
-  command['@from'] = "#{connection.jid.user}@#{connection.jid.domain}/#{connection.jid.resource}"
+  command['@from'] = "#{xmpp.jid.user}@#{xmpp.jid.domain}/#{xmpp.jid.resource}"
   delete args.callid # Sanitize
+  delete args.msgid # Sanitize
   
   # Command attributes
   command[name] = {}
