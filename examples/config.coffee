@@ -1,5 +1,6 @@
 module.exports =
   host: 'telefonica115.orl.voxeo.net'
-  jabberId: 'wearefractal@jabber.org'
-  jabberPass: 'ill4jabber'
+  jabberId: 'contrahax@jabber.org'
+  jabberPass: 'testpass'
+  debug: true
   ping: true

@@ -11,7 +11,8 @@ conn.on 'connected', ->
   
   # Listen for offer command
   conn.on 'offer', (cmd) ->
-    
+    log.info "Incoming call..."
+    answer = rayo.create 'answer', {callid: cmd.callid}
 
 # Set up connection related event handlers
 conn.on 'disconnected', -> log.info 'Connection closed'
